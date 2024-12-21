@@ -52,6 +52,7 @@
   mplus-outline-fonts.githubRelease
   dina-font
   proggyfonts
+ 
    ];
 
   programs.hyprland = {
@@ -228,6 +229,7 @@
      arion
      gcc
      gh
+     rustup
   ];
 
 
