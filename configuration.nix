@@ -8,12 +8,17 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      <home-manager/nixos>
     ];
-
+  
+  
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.blacklistedKernelModules = [ "nouveau" ];
+  boot.kernelParams = [ "psmouse.synaptics_intertouch=0"];
+
+  security.polkit.enable = true;
 
 
   networking.hostName = "dedsec-nixos"; # Define your hostname.
@@ -32,10 +37,36 @@
   };
 
   
+ 
+
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = ["nvidia"];
 
+  fonts.packages = with pkgs; [
+  noto-fonts
+  noto-fonts-cjk-sans
+  noto-fonts-emoji
+  liberation_ttf
+  fira-code
+  fira-code-symbols
+  mplus-outline-fonts.githubRelease
+  dina-font
+  proggyfonts
+   ];
 
+  programs.hyprland = {
+    # Install the packages from nixpkgs
+    enable = false;
+    # Whether to enable XWayland
+    xwayland.enable = true;
+  };
+
+
+
+  home-manager.users.dedsec = {
+  programs.zoxide.enable = true;
+  home.stateVersion = "24.11";
+  };
 
   hardware.nvidia = {
 
@@ -44,7 +75,7 @@
 
     # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
     # Enable this if you have graphical corruption issues or application crashes after waking
-    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
+    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead
     # of just the bare essentials.
     powerManagement.enable = false;
 
@@ -54,9 +85,9 @@
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of 
-    # supported GPUs is at: 
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
+    # Support is limited to the Turing and later architectures. Full list of
+    # supported GPUs is at:
+    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
     # Only available from driver 515.43.04+
     # Currently alpha-quality/buggy, so false is currently the recommended setting.
     open = true;
@@ -103,8 +134,8 @@
   services.xserver.enable = true;
 
   # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
+   services.displayManager.sddm.enable = true;
+   services.desktopManager.plasma6.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -135,22 +166,24 @@
   };
 
   # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  #  services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.dedsec = {
     isNormalUser = true;
     description = "dedsec";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird
     ];
   };
 
+
+
   # Install firefox.
   programs.firefox.enable = true;
-  
+
   # Install steam
   programs.steam = {
   enable = true;
@@ -158,6 +191,9 @@
   dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
   };
+
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -175,16 +211,37 @@
      lshw
      git
      fastfetch
-     zsh
      nodejs
      go
      curl
      jdk17
      jdk8
      tmux
+     fzf
+     home-manager
+     dconf
+     xdg-desktop-portal-hyprland
+     xwayland
+     kitty
+     waybar
+     wofi
+     arion
+     gcc
+     gh
   ];
 
- 
+
+  #Docker
+  virtualisation.docker.enable = true;
+
+  virtualisation.docker.rootless = {
+  enable = true;
+  setSocketVariable = true;
+  };
+  
+  
+
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -212,5 +269,8 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
+
+  # LightDM configuration
+  # services.xserver.displayManager.lightdm.enable = true;
 
 }
