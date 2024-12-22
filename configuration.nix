@@ -16,8 +16,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.blacklistedKernelModules = [ "nouveau" ];
-  boot.kernelParams = [ "psmouse.synaptics_intertouch=0"];
-
+  #boot.kernelParams = [ "psmouse.synaptics_intertouch=0"];
+  #boot.kernelModules = [ "i2c_hid" "psmouse"];
   security.polkit.enable = true;
 
 
@@ -37,7 +37,6 @@
   };
 
   
- 
 
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = ["nvidia"];
@@ -132,11 +131,13 @@
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = true;
+   services.xserver.enable = true;
 
   # Enable the KDE Plasma Desktop Environment.
    services.displayManager.sddm.enable = true;
    services.desktopManager.plasma6.enable = true;
+
+
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -167,7 +168,7 @@
   };
 
   # Enable touchpad support (enabled default in most desktopManager).
-  #  services.xserver.libinput.enable = true;
+      services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.dedsec = {
