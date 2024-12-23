@@ -230,7 +230,10 @@
      arion
      gcc
      gh
+     pkg-config
      rustup
+     obsidian
+     ollama
   ];
 
 
