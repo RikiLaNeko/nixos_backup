@@ -234,6 +234,7 @@
      rustup
      obsidian
      ollama
+     air
   ];
 
 
