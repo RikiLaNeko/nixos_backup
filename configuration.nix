@@ -197,8 +197,11 @@
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+  allowUnfree = true;  # Permet d'installer des paquets non-libres
+  experimental-features = "nix-command flakes";  # Active les fonctionnalités nécessaires
+  };
+
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -235,6 +238,7 @@
      obsidian
      ollama
      air
+     jetbrains-toolbox
   ];
 
 
