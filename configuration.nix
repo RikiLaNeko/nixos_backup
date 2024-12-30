@@ -36,6 +36,21 @@
     enable = true;
   };
 
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  services.blueman.enable = true;
+
+  nix.settings = {
+  experimental-features = [ "nix-command" "flakes" ];
+  substituters = [
+    "https://cache.nixos.org"
+    "https://ghostty.cachix.org"
+  ];
+  trusted-public-keys = [
+    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    "ghostty.cachix.org-1:QB389yTa6gTyneehvqG58y0WnHjQOqgnA+wBnpWWxns="
+  ];
+  };
   
 
   # Load nvidia driver for Xorg and Wayland
