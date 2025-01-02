@@ -254,6 +254,7 @@
      ollama
      air
      jetbrains-toolbox
+     deno
   ];
 
 
