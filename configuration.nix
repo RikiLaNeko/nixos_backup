@@ -20,7 +20,13 @@
   #boot.kernelModules = [ "i2c_hid" "psmouse"];
   security.polkit.enable = true;
 
-
+   
+  #VirtualBox
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.virtualbox.guest.dragAndDrop = true;
+  users.extraGroups.vboxusers.members = [ "dedsec" ];
+  
   networking.hostName = "dedsec-nixos"; # Define your hostname.
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -35,6 +41,8 @@
   hardware.graphics = {
     enable = true;
   };
+
+  services.flatpak.enable = true;
 
   hardware.bluetooth.enable = true; # enables support for Bluetooth
   hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
@@ -234,6 +242,7 @@
      nodejs
      go
      curl
+     jdk21
      jdk17
      jdk8
      tmux
@@ -252,9 +261,13 @@
      rustup
      obsidian
      ollama
+     obs-studio
      air
      jetbrains-toolbox
      deno
+     tigervnc
+     flatpak
+     osu-lazer
   ];
 
 
