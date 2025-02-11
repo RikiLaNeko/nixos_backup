@@ -63,6 +63,8 @@
 
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = ["nvidia"];
+  
+
 
   fonts.packages = with pkgs; [
   noto-fonts
@@ -199,16 +201,14 @@
     description = "dedsec";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
-      kdePackages.kate
+    #  kdePackages.kate
     #  thunderbird
     ];
   };
 
 
 
-  # Install firefox.
-  programs.firefox.enable = true;
-
+  
   # Install steam
   programs.steam = {
   enable = true;
@@ -229,60 +229,81 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-     wget
-     discord-ptb
-      (discord.override {
-      # withOpenASAR = true; # can do this here too
-      withVencord = true;
+    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    wget
+    discord-ptb
+    (discord.override {
+    # withOpenASAR = true; # can do this here too
+    withVencord = true;
     })
-     lshw
-     git
-     fastfetch
-     nodejs
-     go
-     curl
-     jdk21
-     jdk17
-     jdk8
-     tmux
-     fzf
-     home-manager
-     dconf
-     xdg-desktop-portal-hyprland
-     xwayland
-     kitty
-     waybar
-     wofi
-     arion
-     gcc
-     gh
-     pkg-config
-     rustup
-     obsidian
-     ollama
-     obs-studio
-     air
-     jetbrains-toolbox
-     deno
-     tigervnc
-     flatpak
-     osu-lazer
-     chromium
-     librewolf
-     parsec-bin
-     inkscape-with-extensions
-  ];
+    lshw
+    git
+    fastfetch
+    nodejs
+    go
+    curl
+    jdk21
+    jdk17
+    jdk8
+    tmux
+    fzf
+    home-manager
+    dconf
+    xdg-desktop-portal-hyprland
+    xwayland
+    kitty
+    waybar
+    wofi
+    arion
+    gcc
+    gh
+    pkg-config
+    rustup
+    obsidian
+    ollama
+    obs-studio
+    air
+    jetbrains-toolbox
+    deno
+    tigervnc
+    flatpak
+    osu-lazer
+    librewolf
+    parsec-bin
+    inkscape-with-extensions
+    blender
+    onlyoffice-bin
+    nvidia-container-toolkit
+    nvidia-docker
+    #sm64ex
+    sm64ex-coop
+    alsa-lib
+    udev
+    pkg-config
+];
 
 
   #Docker
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+  enable = true;
+  };
+
+  virtualisation.docker.daemon.settings = {
+    runtimes = {
+      nvidia = {
+        path = "${pkgs.nvidia-container-toolkit}/bin/nvidia-container-runtime";
+      };
+    };
+    default-runtime = "nvidia";  # Set NVIDIA as the default runtime
+  };
+
 
   virtualisation.docker.rootless = {
   enable = true;
   setSocketVariable = true;
   };
   
+ hardware.nvidia-container-toolkit.enable = true;  
   
 
 
