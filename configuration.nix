@@ -229,43 +229,74 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  # Éditeurs de texte et IDE
+  # ─────────────────────────────────────────────────────
+  # ÉDITEURS DE TEXTE & IDE
+  # ─────────────────────────────────────────────────────
   neovim              # Éditeur de texte (ne pas oublier pour éditer configuration.nix !)
   vscode              # Visual Studio Code
   jetbrains-toolbox   # Outil pour gérer les IDE JetBrains
   godot_4             # Moteur de jeu Godot 4
 
-  # Outils de développement
+  # ─────────────────────────────────────────────────────
+  # OUTILS DE DÉVELOPPEMENT
+  # ─────────────────────────────────────────────────────
+
+  ## Gestionnaire de versions & outils généraux
   git                 # Gestionnaire de versions
-  nodejs              # JavaScript Runtime
-  go                  # Langage de programmation Go
-  jdk21               # Java Development Kit 21
-  jdk17               # Java Development Kit 17
-  jdk8                # Java Development Kit 8
-  rustup              # Rust
-  gcc                 # Compilateur C/C++
-  gnumake             # Outil de compilation Make
-  cmake               # Outil de build C++
-  gradle              # Outil de build pour Java
-  maven               # Gestionnaire de dépendances Java
-  spring-boot-cli     # CLI pour Spring Boot
   pkg-config          # Utilitaire pour gérer les bibliothèques
-  nasm                # Assembleur pour x86
-  zig                 # Langage de programmation Zig
-  php                 # Langage PHP
-  bun                 # JavaScript / TypeScript Runtime sécurisé
-  laravel             # Framework PHP
-  rbenv               # Gestionnaire de versions Ruby
   readline            # Bibliothèque pour la gestion de l'entrée utilisateur en ligne de commande
   sqlite              # Base de données légère
   openssl             # Bibliothèque cryptographique
   libffi              # Interface pour appels de fonctions C
   libyaml             # Support YAML
   zlib                # Bibliothèque de compression
-  air                 # Live reload pour Go
-  flutter             # flutter
 
-  # Outils CLI et shell
+  ## Langages de programmation
+
+  ### JavaScript / TypeScript
+  nodejs              # JavaScript Runtime
+  bun                 # JavaScript / TypeScript Runtime sécurisé
+
+  ### Go
+  go                  # Langage de programmation Go
+  air                 # Live reload pour Go
+
+  ### Rust
+  rustup              # Rust (avec gestionnaire de versions)
+
+  ### Zig
+  zig                 # Langage de programmation Zig
+
+  ### Assembleur
+  nasm                # Assembleur pour x86
+
+  ### Java & écosystème Spring
+  jdk8                # Java Development Kit 8
+  jdk17               # Java Development Kit 17
+  jdk21               # Java Development Kit 21
+  gradle              # Outil de build pour Java
+  maven               # Gestionnaire de dépendances Java
+  spring-boot-cli     # CLI pour Spring Boot
+
+  ### PHP & Laravel
+  php                 # Langage PHP
+  laravel             # Framework PHP
+
+  ### Ruby
+  ruby                # Langage Ruby
+  rbenv               # Gestionnaire de versions Ruby
+
+  ## Développement Mobile
+  flutter             # SDK Flutter
+
+  ## Compilation et outils de build
+  gcc                 # Compilateur C/C++
+  gnumake             # Outil de compilation Make
+  cmake               # Outil de build C++
+
+  # ─────────────────────────────────────────────────────
+  # OUTILS CLI & SHELL
+  # ─────────────────────────────────────────────────────
   tmux                # Multiplexeur de terminaux
   fzf                 # Recherche floue
   fastfetch           # Fetch d'infos système rapide
@@ -275,8 +306,9 @@
   gitleaks            # Détection de secrets dans Git
   httpie              # Client HTTP amélioré
 
-
-  # Outils système
+  # ─────────────────────────────────────────────────────
+  # OUTILS SYSTÈME
+  # ─────────────────────────────────────────────────────
   home-manager        # Gestionnaire de configuration utilisateur
   dconf               # Configuration de l'environnement de bureau
   xdg-desktop-portal-hyprland # Portail pour Hyprland
@@ -288,7 +320,9 @@
   nvidia-docker       # Docker avec support GPU NVIDIA
   docker-compose      # Gestion de conteneurs
 
-  # Applications desktop utiles
+  # ─────────────────────────────────────────────────────
+  # APPLICATIONS DESKTOP UTILES
+  # ─────────────────────────────────────────────────────
   obsidian            # Prise de notes Markdown
   lmstudio            # Interface pour modèles IA locaux
   onlyoffice-bin      # Suite bureautique
@@ -296,7 +330,9 @@
   obs-studio          # Streaming et enregistrement
   vlc                 # Lecteur multimédia
 
-  # Réseau et communication
+  # ─────────────────────────────────────────────────────
+  # RÉSEAU & COMMUNICATION
+  # ─────────────────────────────────────────────────────
   (discord.override {
     withVencord = true; # Modifications pour Discord
   })
@@ -304,13 +340,19 @@
   parsec-bin          # Remote desktop gaming
   ngrok               # Tunnel réseau
 
-  # Gaming
+  # ─────────────────────────────────────────────────────
+  # GAMING
+  # ─────────────────────────────────────────────────────
   osu-lazer           # Version open-source d'Osu!
   sm64ex-coop         # Super Mario 64 modifié en coop
 
-  # Outils Android et mobile
+  # ─────────────────────────────────────────────────────
+  # OUTILS ANDROID & MOBILE
+  # ─────────────────────────────────────────────────────
   android-tools       # Outils ADB et Fastboot
 ];
+
+
 
 
 
