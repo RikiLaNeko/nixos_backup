@@ -42,11 +42,12 @@
     enable = true;
   };
 
-  services.flatpak.enable = true;
+
 
   hardware.bluetooth.enable = true; # enables support for Bluetooth
   hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
   services.blueman.enable = true;
+
 
   nix.settings = {
   experimental-features = [ "nix-command" "flakes" ];
@@ -201,8 +202,7 @@
     description = "dedsec";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
-    #  kdePackages.kate
-    #  thunderbird
+
     ];
   };
 
@@ -229,58 +229,90 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
-    discord-ptb
-    (discord.override {
-    # withOpenASAR = true; # can do this here too
-    withVencord = true;
-    })
-    lshw
-    git
-    fastfetch
-    nodejs
-    go
-    curl
-    jdk21
-    jdk17
-    jdk8
-    tmux
-    fzf
-    home-manager
-    dconf
-    xdg-desktop-portal-hyprland
-    xwayland
-    kitty
-    waybar
-    wofi
-    arion
-    gcc
-    gh
-    pkg-config
-    rustup
-    obsidian
-    ollama
-    obs-studio
-    air
-    jetbrains-toolbox
-    deno
-    tigervnc
-    flatpak
-    osu-lazer
-    librewolf
-    parsec-bin
-    inkscape-with-extensions
-    blender
-    onlyoffice-bin
-    nvidia-container-toolkit
-    nvidia-docker
-    #sm64ex
-    sm64ex-coop
-    alsa-lib
-    udev
-    pkg-config
+  # Éditeurs de texte et IDE
+  neovim              # Éditeur de texte (ne pas oublier pour éditer configuration.nix !)
+  vscode              # Visual Studio Code
+  jetbrains-toolbox   # Outil pour gérer les IDE JetBrains
+  godot_4             # Moteur de jeu Godot 4
+
+  # Outils de développement
+  git                 # Gestionnaire de versions
+  nodejs              # JavaScript Runtime
+  go                  # Langage de programmation Go
+  jdk21               # Java Development Kit 21
+  jdk17               # Java Development Kit 17
+  jdk8                # Java Development Kit 8
+  rustup              # Rust
+  gcc                 # Compilateur C/C++
+  gnumake             # Outil de compilation Make
+  cmake               # Outil de build C++
+  gradle              # Outil de build pour Java
+  maven               # Gestionnaire de dépendances Java
+  spring-boot-cli     # CLI pour Spring Boot
+  pkg-config          # Utilitaire pour gérer les bibliothèques
+  nasm                # Assembleur pour x86
+  zig                 # Langage de programmation Zig
+  php                 # Langage PHP
+  bun                 # JavaScript / TypeScript Runtime sécurisé
+  laravel             # Framework PHP
+  rbenv               # Gestionnaire de versions Ruby
+  readline            # Bibliothèque pour la gestion de l'entrée utilisateur en ligne de commande
+  sqlite              # Base de données légère
+  openssl             # Bibliothèque cryptographique
+  libffi              # Interface pour appels de fonctions C
+  libyaml             # Support YAML
+  zlib                # Bibliothèque de compression
+  air                 # Live reload pour Go
+  flutter             # flutter
+
+  # Outils CLI et shell
+  tmux                # Multiplexeur de terminaux
+  fzf                 # Recherche floue
+  fastfetch           # Fetch d'infos système rapide
+  curl                # Client HTTP
+  wget                # Client HTTP
+  gh                  # GitHub CLI
+  gitleaks            # Détection de secrets dans Git
+  httpie              # Client HTTP amélioré
+
+
+  # Outils système
+  home-manager        # Gestionnaire de configuration utilisateur
+  dconf               # Configuration de l'environnement de bureau
+  xdg-desktop-portal-hyprland # Portail pour Hyprland
+  xwayland            # Compatibilité X11 sous Wayland
+  lshw                # Affichage des infos matérielles
+  alsa-lib            # Bibliothèque ALSA (son)
+  udev                # Gestion des périphériques
+  nvidia-container-toolkit # Outils pour exécuter des conteneurs sur GPU NVIDIA
+  nvidia-docker       # Docker avec support GPU NVIDIA
+  docker-compose      # Gestion de conteneurs
+
+  # Applications desktop utiles
+  obsidian            # Prise de notes Markdown
+  lmstudio            # Interface pour modèles IA locaux
+  onlyoffice-bin      # Suite bureautique
+  blender             # Modélisation 3D
+  obs-studio          # Streaming et enregistrement
+  vlc                 # Lecteur multimédia
+
+  # Réseau et communication
+  (discord.override {
+    withVencord = true; # Modifications pour Discord
+  })
+  element-desktop     # Client Matrix
+  parsec-bin          # Remote desktop gaming
+  ngrok               # Tunnel réseau
+
+  # Gaming
+  osu-lazer           # Version open-source d'Osu!
+  sm64ex-coop         # Super Mario 64 modifié en coop
+
+  # Outils Android et mobile
+  android-tools       # Outils ADB et Fastboot
 ];
+
+
 
 
   #Docker
@@ -306,7 +338,20 @@
  hardware.nvidia-container-toolkit.enable = true;  
   
 
-
+systemd.services.ollama = {
+  description = "Ollama Serve";
+  wantedBy = [ "multi-user.target" ];
+  after = [ "network.target" ];
+  serviceConfig = {
+    ExecStart = "/nix/store/667fn01apbb6ia0hjh4ai7pyxj8acihb-ollama-0.3.12/bin/ollama serve";
+    Restart = "always";
+    User = "dedsec";
+    Environment = [
+      "HOME=/home/dedsec"  # Assurez-vous que c'est bien votre chemin HOME
+      "OLLAMA_HOST=0.0.0.0:11434"  # Permet à Ollama d'écouter sur toutes les interfaces
+    ];
+  };
+};
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
