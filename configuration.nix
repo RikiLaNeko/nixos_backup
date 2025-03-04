@@ -319,6 +319,7 @@
   nvidia-container-toolkit # Outils pour exécuter des conteneurs sur GPU NVIDIA
   nvidia-docker       # Docker avec support GPU NVIDIA
   docker-compose      # Gestion de conteneurs
+  librewolf           # Fork de firefox mais libre
 
   # ─────────────────────────────────────────────────────
   # APPLICATIONS DESKTOP UTILES
