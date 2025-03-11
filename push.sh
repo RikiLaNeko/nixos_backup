@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cp ~/.zshrc .
+cp /home/dedsec/.zshrc .
 
 git add .
 
