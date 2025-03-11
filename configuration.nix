@@ -20,12 +20,8 @@
   #boot.kernelModules = [ "i2c_hid" "psmouse"];
   security.polkit.enable = true;
 
-   
-  #VirtualBox
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.host.enableExtensionPack = true;
-  virtualisation.virtualbox.guest.dragAndDrop = true;
-  users.extraGroups.vboxusers.members = [ "dedsec" ];
+  virtualisation.libvirtd.enable = true; 
+ 
   
   networking.hostName = "dedsec-nixos"; # Define your hostname.
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -200,11 +196,25 @@
   users.users.dedsec = {
     isNormalUser = true;
     description = "dedsec";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" "kvm" "qemu"   ];
     packages = with pkgs; [
 
     ];
   };
+
+  # Set proper permissions on libvirt directories
+systemd.tmpfiles.rules = [
+  "d /var/lib/libvirt/images 0770 root libvirtd -"
+];
+
+# Configure your Rails service
+systemd.services.kvm-api = {
+  serviceConfig = {
+    User = "dedsec";
+    Group = "libvirtd";
+    SupplementaryGroups = [ "kvm" "qemu" ];
+  };
+};
 
 
 
@@ -245,10 +255,9 @@
   git                 # Gestionnaire de versions
   pkg-config          # Utilitaire pour gérer les bibliothèques
   readline            # Bibliothèque pour la gestion de l'entrée utilisateur en ligne de commande
-  sqlite              # Base de données légère
   openssl             # Bibliothèque cryptographique
   libffi              # Interface pour appels de fonctions C
-  libyaml             # Support YAML
+  libyaml
   zlib                # Bibliothèque de compression
 
   ## Langages de programmation
@@ -278,6 +287,9 @@
   maven               # Gestionnaire de dépendances Java
   spring-boot-cli     # CLI pour Spring Boot
 
+  ### Kotlin
+  kotlin
+
   ### PHP & Laravel
   php                 # Langage PHP
   laravel             # Framework PHP
@@ -293,6 +305,15 @@
   gcc                 # Compilateur C/C++
   gnumake             # Outil de compilation Make
   cmake               # Outil de build C++
+
+  # ─────────────────────────────────────────────────────
+  # BASE DE DONNEES
+  # ─────────────────────────────────────────────────────
+  postgresql          #BDD relationel opensource
+  postgresql.lib
+  sqlite              # Base de données légère
+  redis               # BDD de chacing / ramdisk
+
 
   # ─────────────────────────────────────────────────────
   # OUTILS CLI & SHELL
@@ -319,7 +340,15 @@
   nvidia-container-toolkit # Outils pour exécuter des conteneurs sur GPU NVIDIA
   nvidia-docker       # Docker avec support GPU NVIDIA
   docker-compose      # Gestion de conteneurs
+  kubernetes          # Gestion de conteneurs plus poussée
   librewolf           # Fork de firefox mais libre
+  qemu                # Machine virtuelle  
+  virt-manager
+  virt-viewer
+  ollama
+  libvirt
+  cdrkit
+
 
   # ─────────────────────────────────────────────────────
   # APPLICATIONS DESKTOP UTILES
@@ -345,12 +374,13 @@
   # GAMING
   # ─────────────────────────────────────────────────────
   osu-lazer           # Version open-source d'Osu!
-  sm64ex-coop         # Super Mario 64 modifié en coop
+  
 
   # ─────────────────────────────────────────────────────
   # OUTILS ANDROID & MOBILE
   # ─────────────────────────────────────────────────────
   android-tools       # Outils ADB et Fastboot
+
 ];
 
 
