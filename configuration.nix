@@ -133,6 +133,8 @@
     packages = with pkgs; [ ];
   };
 
+
+
   ##########################
   # Paquets Système        #
   ##########################
@@ -144,11 +146,11 @@
     vscode              # Visual Studio Code (IDE polyvalent)
     jetbrains-toolbox   # Gestionnaire des IDE JetBrains
     godot_4             # Moteur de jeu Godot 4
-
+    
     # ─────────────────────────────────────────────────────
     # OUTILS DE DÉVELOPPEMENT
     # ─────────────────────────────────────────────────────
-
+    
     ## Gestion des versions et dépendances
     git                 # Gestionnaire de versions Git
     pkg-config          # Outil pour gérer les dépendances C/C++
@@ -157,13 +159,13 @@
     libffi              # Interface d’appel de fonctions C
     libyaml             # Parsing YAML
     zlib                # Compression
-
+    
     ## Langages de programmation
-
+    
     ### JavaScript / TypeScript
     nodejs              # Runtime JS
     bun                 # Runtime JS alternatif plus rapide
-
+    
     ### Java, Kotlin & Spring
     jdk8                # Java Development Kit 8 (legacy)
     jdk17               # Java Development Kit 17 (LTS)
@@ -172,36 +174,36 @@
     gradle              # Outil de build pour JVM
     maven               # Gestionnaire de dépendances Java
     spring-boot-cli     # CLI pour Spring Boot
-
+    
     ### Go
     go                  # Langage Go
     air                 # Hot reload pour Go
-
+    
     ### Rust
     rustup              # Gestionnaire Rust
-
+    
     ### Zig
     zig                 # Langage Zig
-
+    
     ### Assembleur
     nasm                # Assembleur x86
-
+    
     ### PHP & Laravel
     php                 # PHP
     laravel             # Framework Laravel
-
+    
     ### Ruby & Rails
     ruby                # Ruby
     rbenv               # Gestionnaire de versions Ruby
-
+    
     ## Développement Mobile
     flutter             # SDK Flutter
-
+    
     ## Compilation et outils de build
     gcc                 # Compilateur C/C++
     gnumake             # Makefile
     cmake               # Build C++
-
+    
     # ─────────────────────────────────────────────────────
     # BASES DE DONNÉES
     # ─────────────────────────────────────────────────────
@@ -209,7 +211,7 @@
     postgresql.lib      # Bibliothèque PostgreSQL
     sqlite              # Base de données légère
     redis               # Cache / stockage en RAM
-
+    
     # ─────────────────────────────────────────────────────
     # OUTILS CLI & SHELL
     # ─────────────────────────────────────────────────────
@@ -221,7 +223,8 @@
     gh                  # CLI GitHub
     gitleaks            # Détection de secrets dans Git
     httpie              # Alternative plus lisible à curl
-
+    lsd                 # Better LS
+    
     # ─────────────────────────────────────────────────────
     # VIRTUALISATION & CONTAINERS
     # ─────────────────────────────────────────────────────
@@ -235,7 +238,7 @@
     nvidia-docker       # Docker avec GPU NVIDIA
     kubernetes          # Orchestration avancée
     minikube            # Kubernetes en local
-
+    
     # ─────────────────────────────────────────────────────
     # APPLICATIONS DESKTOP UTILES
     # ─────────────────────────────────────────────────────
@@ -245,7 +248,7 @@
     blender             # Modélisation 3D
     obs-studio          # Enregistrement & streaming
     vlc                 # Lecteur multimédia
-
+    
     # ─────────────────────────────────────────────────────
     # NAVIGATION & COMMUNICATION
     # ─────────────────────────────────────────────────────
@@ -254,18 +257,19 @@
     element-desktop     # Client Matrix
     parsec-bin          # Remote Desktop Gaming
     ngrok               # Tunnel réseau sécurisé
-
+    
     # ─────────────────────────────────────────────────────
     # GAMING
     # ─────────────────────────────────────────────────────
     lutris              # Gestion des jeux sous Linux
     osu-lazer           # Version open-source de Osu!
-
+    
     # ─────────────────────────────────────────────────────
     # OUTILS ANDROID & MOBILE
     # ─────────────────────────────────────────────────────
     android-tools       # ADB & Fastboot pour Android
-  ];
+    eza
+];
 
 
   ##########################

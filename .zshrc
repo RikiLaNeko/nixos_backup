@@ -76,7 +76,7 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Aliases
-alias ls='ls --color'
+alias ls='exa --icons --color=auto'
 alias vim='nvim'
 alias c='clear'
 
@@ -94,9 +94,14 @@ export PKG_CONFIG_PATH=~/.local/pkgconfig:/run/current-system/sw/lib/pkgconfig:$
 export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
 export PATH="/home/dedsec/.bun/bin:$PATH"
 FPATH=~/.rbenv/completions:"$FPATH"
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 
 autoload -U compinit
 compinit
 
+fpath=($HOME/.zsh_completions $fpath)
+
 # Load Angular CLI autocompletion.
 source <(ng completion script)
+source <(kubectl completion zsh)
+
