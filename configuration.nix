@@ -140,60 +140,58 @@
     # ─────────────────────────────────────────────────────
     # ÉDITEURS DE TEXTE & IDE
     # ─────────────────────────────────────────────────────
-    neovim              # Éditeur de texte (ne pas oublier pour éditer configuration.nix !)
-    vscode              # Visual Studio Code
-    jetbrains-toolbox   # Outil pour gérer les IDE JetBrains
+    neovim              # Éditeur de texte léger et rapide
+    vscode              # Visual Studio Code (IDE polyvalent)
+    jetbrains-toolbox   # Gestionnaire des IDE JetBrains
     godot_4             # Moteur de jeu Godot 4
 
     # ─────────────────────────────────────────────────────
     # OUTILS DE DÉVELOPPEMENT
     # ─────────────────────────────────────────────────────
 
-    ## Gestionnaire de versions & outils généraux
-    git                 # Gestionnaire de versions
-    pkg-config          # Utilitaire pour gérer les bibliothèques
-    readline            # Bibliothèque pour la gestion de l'entrée utilisateur en ligne de commande
-    openssl             # Bibliothèque cryptographique
-    libffi              # Interface pour appels de fonctions C
-    libyaml
-    zlib                # Bibliothèque de compression
+    ## Gestion des versions et dépendances
+    git                 # Gestionnaire de versions Git
+    pkg-config          # Outil pour gérer les dépendances C/C++
+    readline            # Gestion des entrées en ligne de commande
+    openssl             # Bibliothèque de chiffrement
+    libffi              # Interface d’appel de fonctions C
+    libyaml             # Parsing YAML
+    zlib                # Compression
 
     ## Langages de programmation
 
     ### JavaScript / TypeScript
-    nodejs              # JavaScript Runtime
-    bun                 # JavaScript / TypeScript Runtime sécurisé
+    nodejs              # Runtime JS
+    bun                 # Runtime JS alternatif plus rapide
 
-    ### Go
-    go                  # Langage de programmation Go
-    air                 # Live reload pour Go
-
-    ### Rust
-    rustup              # Rust (avec gestionnaire de versions)
-
-    ### Zig
-    zig                 # Langage de programmation Zig
-
-    ### Assembleur
-    nasm                # Assembleur pour x86
-
-    ### Java & écosystème Spring
-    jdk8                # Java Development Kit 8
-    jdk17               # Java Development Kit 17
-    jdk21               # Java Development Kit 21
-    gradle              # Outil de build pour Java
+    ### Java, Kotlin & Spring
+    jdk8                # Java Development Kit 8 (legacy)
+    jdk17               # Java Development Kit 17 (LTS)
+    jdk21               # Java Development Kit 21 (dernier stable)
+    kotlin              # Langage Kotlin
+    gradle              # Outil de build pour JVM
     maven               # Gestionnaire de dépendances Java
     spring-boot-cli     # CLI pour Spring Boot
 
-    ### Kotlin
-    kotlin
+    ### Go
+    go                  # Langage Go
+    air                 # Hot reload pour Go
+
+    ### Rust
+    rustup              # Gestionnaire Rust
+
+    ### Zig
+    zig                 # Langage Zig
+
+    ### Assembleur
+    nasm                # Assembleur x86
 
     ### PHP & Laravel
-    php                 # Langage PHP
-    laravel             # Framework PHP
+    php                 # PHP
+    laravel             # Framework Laravel
 
-    ### Ruby
-    ruby                # Langage Ruby
+    ### Ruby & Rails
+    ruby                # Ruby
     rbenv               # Gestionnaire de versions Ruby
 
     ## Développement Mobile
@@ -201,81 +199,74 @@
 
     ## Compilation et outils de build
     gcc                 # Compilateur C/C++
-    gnumake             # Outil de compilation Make
-    cmake               # Outil de build C++
+    gnumake             # Makefile
+    cmake               # Build C++
 
     # ─────────────────────────────────────────────────────
-    # BASE DE DONNEES
+    # BASES DE DONNÉES
     # ─────────────────────────────────────────────────────
-    postgresql          #BDD relationel opensource
-    postgresql.lib
+    postgresql          # SGBD relationnel Open Source
+    postgresql.lib      # Bibliothèque PostgreSQL
     sqlite              # Base de données légère
-    redis               # BDD de chacing / ramdisk
+    redis               # Cache / stockage en RAM
 
     # ─────────────────────────────────────────────────────
     # OUTILS CLI & SHELL
     # ─────────────────────────────────────────────────────
     tmux                # Multiplexeur de terminaux
-    fzf                 # Recherche floue
-    fastfetch           # Fetch d'infos système rapide
-    curl                # Client HTTP
-    wget                # Client HTTP
-    gh                  # GitHub CLI
+    fzf                 # Recherche floue dans le terminal
+    fastfetch           # Fetch d’infos système rapide
+    curl                # Requêtes HTTP en ligne de commande
+    wget                # Téléchargement HTTP
+    gh                  # CLI GitHub
     gitleaks            # Détection de secrets dans Git
-    httpie              # Client HTTP amélioré
+    httpie              # Alternative plus lisible à curl
 
     # ─────────────────────────────────────────────────────
-    # OUTILS SYSTÈME
+    # VIRTUALISATION & CONTAINERS
     # ─────────────────────────────────────────────────────
-    home-manager        # Gestionnaire de configuration utilisateur
-    dconf               # Configuration de l'environnement de bureau
-    xdg-desktop-portal-hyprland # Portail pour Hyprland
-    xwayland            # Compatibilité X11 sous Wayland
-    lshw                # Affichage des infos matérielles
-    alsa-lib            # Bibliothèque ALSA (son)
-    udev                # Gestion des périphériques
-    nvidia-container-toolkit # Outils pour exécuter des conteneurs sur GPU NVIDIA
-    nvidia-docker       # Docker avec support GPU NVIDIA
-    docker-compose      # Gestion de conteneurs
-    kubernetes          # Gestion de conteneurs plus poussée
-    librewolf           # Fork de firefox mais libre
-    qemu                # Machine virtuelle
-    virt-manager
-    virt-viewer
-    ollama
-    libvirt
-    cdrkit
+    qemu                # Virtualisation KVM/QEMU
+    virt-manager        # Interface graphique pour QEMU
+    virt-viewer         # Visionneuse VM
+    libvirt             # Gestionnaire de virtualisation
+    ollama              # Exécution de modèles IA locaux
+    docker-compose      # Orchestration de containers Docker
+    nvidia-container-toolkit # Support NVIDIA pour containers
+    nvidia-docker       # Docker avec GPU NVIDIA
+    kubernetes          # Orchestration avancée
+    minikube            # Kubernetes en local
 
     # ─────────────────────────────────────────────────────
     # APPLICATIONS DESKTOP UTILES
     # ─────────────────────────────────────────────────────
-    obsidian            # Prise de notes Markdown
-    lmstudio            # Interface pour modèles IA locaux
-    onlyoffice-bin      # Suite bureautique
+    obsidian            # Notes en Markdown
+    lmstudio            # Interface pour LLMs locaux
+    onlyoffice-bin      # Suite bureautique alternative
     blender             # Modélisation 3D
-    obs-studio          # Streaming et enregistrement
+    obs-studio          # Enregistrement & streaming
     vlc                 # Lecteur multimédia
 
     # ─────────────────────────────────────────────────────
-    # RÉSEAU & COMMUNICATION
+    # NAVIGATION & COMMUNICATION
     # ─────────────────────────────────────────────────────
-    (discord.override {
-      withVencord = true; # Modifications pour Discord
-    })
+    librewolf           # Fork de Firefox, axé sur la vie privée
+    (discord.override { withVencord = true; }) # Discord + Vencord
     element-desktop     # Client Matrix
-    parsec-bin          # Remote desktop gaming
-    ngrok               # Tunnel réseau
+    parsec-bin          # Remote Desktop Gaming
+    ngrok               # Tunnel réseau sécurisé
 
     # ─────────────────────────────────────────────────────
     # GAMING
     # ─────────────────────────────────────────────────────
-    osu-lazer           # Version open-source d'Osu!
+    lutris              # Gestion des jeux sous Linux
+    osu-lazer           # Version open-source de Osu!
 
     # ─────────────────────────────────────────────────────
     # OUTILS ANDROID & MOBILE
     # ─────────────────────────────────────────────────────
-    android-tools       # Outils ADB et Fastboot
+    android-tools       # ADB & Fastboot pour Android
   ];
+
 
   ##########################
   # Services Spécifiques   #
