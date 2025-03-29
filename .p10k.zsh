@@ -33,9 +33,9 @@
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
     os_icon                 # os identifier
+    battery
     dir                     # current directory
     vcs                     # git status
-    battery
     # =========================[ Line #2 ]=========================
     newline                 # \n
     # prompt_char           # prompt symbol
@@ -47,6 +47,7 @@
   # last prompt line gets hidden if it would overlap with left prompt.
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
+    ram                     # free RAM
     status                  # exit code of the last command
     command_execution_time  # duration of the last command
     background_jobs         # presence of background jobs
@@ -111,7 +112,6 @@
     # cpu_arch              # CPU architecture
     # time                  # current time
     asm                     # assembly language indicator
-    ram
     # =========================[ Line #2 ]=========================
     newline                 # \n
     # ip                    # ip address and bandwidth usage for a specified network interface

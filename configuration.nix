@@ -34,8 +34,23 @@
   ##########################
   # Réseau & Proxy         #
   ##########################
-  networking.hostName = "dedsec-nixos";
-  networking.networkmanager.enable = true;
+  networking = {
+  hostName = "dedsec-nixos";
+  networkmanager.enable = true;
+
+  #bridges = {
+  #  br0 = {
+  #    interfaces = [ "eno1" ];
+  #  };
+  #};
+
+  #interfaces = {
+  #  br0 = {
+  #    useDHCP = true;
+  #  };
+  #};
+
+};
 
   ##########################
   # Graphismes & Hardware  #
@@ -204,6 +219,9 @@
     gnumake             # Makefile
     cmake               # Build C++
     
+    ## Python
+    python3
+
     # ─────────────────────────────────────────────────────
     # BASES DE DONNÉES
     # ─────────────────────────────────────────────────────
@@ -224,6 +242,8 @@
     gitleaks            # Détection de secrets dans Git
     httpie              # Alternative plus lisible à curl
     lsd                 # Better LS
+    hugo
+    netplan
     
     # ─────────────────────────────────────────────────────
     # VIRTUALISATION & CONTAINERS
