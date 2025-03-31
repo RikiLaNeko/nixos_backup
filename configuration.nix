@@ -35,22 +35,22 @@
   # Réseau & Proxy         #
   ##########################
   networking = {
-  hostName = "dedsec-nixos";
-  networkmanager.enable = true;
+    hostName = "dedsec-nixos";
+    networkmanager.enable = true;
 
-  #bridges = {
-  #  br0 = {
-  #    interfaces = [ "eno1" ];
-  #  };
-  #};
+    #bridges = {
+    #  br0 = {
+    #    interfaces = [ "eno1" ];
+    #  };
+    #};
 
-  #interfaces = {
-  #  br0 = {
-  #    useDHCP = true;
-  #  };
-  #};
+    #interfaces = {
+    #  br0 = {
+    #    useDHCP = true;
+    #  };
+    #};
 
-};
+  };
 
   ##########################
   # Graphismes & Hardware  #
@@ -150,146 +150,154 @@
 
 
 
-  ##########################
-  # Paquets Système        #
-  ##########################
-  environment.systemPackages = with pkgs; [
-    # ─────────────────────────────────────────────────────
-    # ÉDITEURS DE TEXTE & IDE
-    # ─────────────────────────────────────────────────────
-    neovim              # Éditeur de texte léger et rapide
-    vscode              # Visual Studio Code (IDE polyvalent)
-    jetbrains-toolbox   # Gestionnaire des IDE JetBrains
-    godot_4             # Moteur de jeu Godot 4
-    
-    # ─────────────────────────────────────────────────────
-    # OUTILS DE DÉVELOPPEMENT
-    # ─────────────────────────────────────────────────────
-    
-    ## Gestion des versions et dépendances
-    git                 # Gestionnaire de versions Git
-    pkg-config          # Outil pour gérer les dépendances C/C++
-    readline            # Gestion des entrées en ligne de commande
-    openssl             # Bibliothèque de chiffrement
-    libffi              # Interface d’appel de fonctions C
-    libyaml             # Parsing YAML
-    zlib                # Compression
-    
-    ## Langages de programmation
-    
-    ### JavaScript / TypeScript
-    nodejs              # Runtime JS
-    bun                 # Runtime JS alternatif plus rapide
-    
-    ### Java, Kotlin & Spring
-    jdk8                # Java Development Kit 8 (legacy)
-    jdk17               # Java Development Kit 17 (LTS)
-    jdk21               # Java Development Kit 21 (dernier stable)
-    kotlin              # Langage Kotlin
-    gradle              # Outil de build pour JVM
-    maven               # Gestionnaire de dépendances Java
-    spring-boot-cli     # CLI pour Spring Boot
-    
-    ### Go
-    go                  # Langage Go
-    air                 # Hot reload pour Go
-    
-    ### Rust
-    rustup              # Gestionnaire Rust
-    
-    ### Zig
-    zig                 # Langage Zig
-    
-    ### Assembleur
-    nasm                # Assembleur x86
-    
-    ### PHP & Laravel
-    php                 # PHP
-    laravel             # Framework Laravel
-    
-    ### Ruby & Rails
-    ruby                # Ruby
-    rbenv               # Gestionnaire de versions Ruby
-    
-    ## Développement Mobile
-    flutter             # SDK Flutter
-    
-    ## Compilation et outils de build
-    gcc                 # Compilateur C/C++
-    gnumake             # Makefile
-    cmake               # Build C++
-    
-    ## Python
-    python3
+##########################
+# Paquets Système        #
+##########################
+environment.systemPackages = with pkgs; [
+  # ─────────────────────────────────────────────────────
+  # ÉDITEURS DE TEXTE & IDE
+  # ─────────────────────────────────────────────────────
+  neovim              # Éditeur de texte léger et rapide, avec de nombreuses extensions et personnalisations
+  vscode              # Visual Studio Code (IDE polyvalent) avec support d'extensions variées
+  jetbrains-toolbox   # Gestionnaire des IDE JetBrains (IntelliJ IDEA, PyCharm, etc.)
+  godot_4             # Moteur de jeu Godot 4, open source pour la création de jeux vidéo
 
-    # ─────────────────────────────────────────────────────
-    # BASES DE DONNÉES
-    # ─────────────────────────────────────────────────────
-    postgresql          # SGBD relationnel Open Source
-    postgresql.lib      # Bibliothèque PostgreSQL
-    sqlite              # Base de données légère
-    redis               # Cache / stockage en RAM
-    
-    # ─────────────────────────────────────────────────────
-    # OUTILS CLI & SHELL
-    # ─────────────────────────────────────────────────────
-    tmux                # Multiplexeur de terminaux
-    fzf                 # Recherche floue dans le terminal
-    fastfetch           # Fetch d’infos système rapide
-    curl                # Requêtes HTTP en ligne de commande
-    wget                # Téléchargement HTTP
-    gh                  # CLI GitHub
-    gitleaks            # Détection de secrets dans Git
-    httpie              # Alternative plus lisible à curl
-    lsd                 # Better LS
-    hugo
-    netplan
-    
-    # ─────────────────────────────────────────────────────
-    # VIRTUALISATION & CONTAINERS
-    # ─────────────────────────────────────────────────────
-    qemu                # Virtualisation KVM/QEMU
-    virt-manager        # Interface graphique pour QEMU
-    virt-viewer         # Visionneuse VM
-    libvirt             # Gestionnaire de virtualisation
-    ollama              # Exécution de modèles IA locaux
-    docker-compose      # Orchestration de containers Docker
-    nvidia-container-toolkit # Support NVIDIA pour containers
-    nvidia-docker       # Docker avec GPU NVIDIA
-    kubernetes          # Orchestration avancée
-    minikube            # Kubernetes en local
-    
-    # ─────────────────────────────────────────────────────
-    # APPLICATIONS DESKTOP UTILES
-    # ─────────────────────────────────────────────────────
-    obsidian            # Notes en Markdown
-    lmstudio            # Interface pour LLMs locaux
-    onlyoffice-bin      # Suite bureautique alternative
-    blender             # Modélisation 3D
-    obs-studio          # Enregistrement & streaming
-    vlc                 # Lecteur multimédia
-    
-    # ─────────────────────────────────────────────────────
-    # NAVIGATION & COMMUNICATION
-    # ─────────────────────────────────────────────────────
-    librewolf           # Fork de Firefox, axé sur la vie privée
-    (discord.override { withVencord = true; }) # Discord + Vencord
-    element-desktop     # Client Matrix
-    parsec-bin          # Remote Desktop Gaming
-    ngrok               # Tunnel réseau sécurisé
-    
-    # ─────────────────────────────────────────────────────
-    # GAMING
-    # ─────────────────────────────────────────────────────
-    lutris              # Gestion des jeux sous Linux
-    osu-lazer           # Version open-source de Osu!
-    
-    # ─────────────────────────────────────────────────────
-    # OUTILS ANDROID & MOBILE
-    # ─────────────────────────────────────────────────────
-    android-tools       # ADB & Fastboot pour Android
-    eza
+  # ─────────────────────────────────────────────────────
+  # OUTILS DE DÉVELOPPEMENT
+  # ─────────────────────────────────────────────────────
+  ## Gestion des versions et dépendances
+  git                 # Gestionnaire de versions Git pour le contrôle de source
+  pkg-config          # Outil pour gérer les dépendances C/C++ via des fichiers de configuration
+  readline            # Gestion des entrées en ligne de commande pour une meilleure UX
+  openssl             # Bibliothèque de chiffrement, utilisée dans la sécurité des applications
+  libffi              # Interface d'appel de fonctions C pour les bindings entre langages
+  libyaml             # Librairie pour parser et écrire du YAML, très utilisé dans les configurations
+  zlib                # Compression des données, utilisée par de nombreux outils et applications
+
+  ## Langages de programmation
+  ### JavaScript / TypeScript
+  nodejs              # Runtime JS pour exécuter des applications JavaScript côté serveur
+  bun                 # Runtime JS alternatif plus rapide, incluant un bundler et un gestionnaire de paquets
+
+  ### Java, Kotlin & Spring
+  jdk8                # Java Development Kit 8 (legacy), pour les applications Java anciennes
+  jdk17               # Java Development Kit 17 (LTS), version stable et à long terme
+  jdk21               # Java Development Kit 21 (dernier stable), dernière version de Java
+  kotlin              # Langage Kotlin pour le développement moderne et multiplateforme
+  gradle              # Outil de build pour JVM, avec support Kotlin, Groovy et autres
+  maven               # Gestionnaire de dépendances Java, utilisé dans de nombreux projets Java
+  spring-boot-cli     # CLI pour Spring Boot, simplifie le démarrage d'applications Spring
+
+  ### Go
+  go                  # Langage Go, connu pour sa simplicité et ses performances élevées
+  air                 # Hot reload pour Go, permet de recharger automatiquement les applications Go pendant le développement
+
+  ### Rust
+  rustup              # Gestionnaire Rust pour gérer les versions et les outils Rust
+
+  ### Zig
+  zig                 # Langage Zig, connu pour sa performance et sa gestion manuelle de la mémoire
+
+  ### Assembleur
+  nasm                # Assembleur x86, utilisé pour écrire du code bas niveau performant
+
+  ### PHP & Laravel
+  php                 # PHP, langage populaire pour le développement web
+  laravel             # Framework Laravel, connu pour sa simplicité et ses bonnes pratiques en PHP
+
+  ### Ruby & Rails
+  ruby                # Ruby, langage de programmation dynamique
+  rbenv               # Gestionnaire de versions Ruby pour faciliter la gestion de plusieurs versions de Ruby
+
+  ## Développement Mobile
+  flutter             # SDK Flutter pour le développement mobile multiplateforme
+
+  ## Compilation et outils de build
+  gcc                 # Compilateur C/C++, l'un des plus utilisés
+  gnumake             # Makefile, utile pour automatiser les tâches de build
+  cmake               # Outil de build C++ multiplateforme
+
+  ## Python
+  python3             # Python 3, très utilisé pour le développement de scripts et d'applications
+
+  ## Outils de développement Nix
+  nixpkgs-fmt         # Formatage de fichiers Nix
+  nixd                # Serveur LSP pour le langage Nix, utile pour l'édition de fichiers .nix
+  devbox              # Gestion simplifiée des environnements de développement
+  direnv              # Chargement automatique des variables d’environnement par projet
+  just                # Alternative moderne à Makefile pour automatiser des tâches
+  difftastic          # Diff amélioré avec reconnaissance syntaxique
+
+  # ─────────────────────────────────────────────────────
+  # BASES DE DONNÉES
+  # ─────────────────────────────────────────────────────
+  postgresql          # SGBD relationnel Open Source, robuste et largement utilisé
+  postgresql.lib      # Bibliothèque PostgreSQL pour les applications C/C++ et autres
+  sqlite              # Base de données légère, utilisée dans les applications mobiles ou embarquées
+  redis               # Cache / stockage en RAM pour des performances accrues
+
+  # ─────────────────────────────────────────────────────
+  # OUTILS CLI & SHELL
+  # ─────────────────────────────────────────────────────
+  tmux                # Multiplexeur de terminaux, permet de gérer plusieurs sessions dans un terminal
+  fzf                 # Recherche floue dans le terminal, améliore l'efficacité de navigation
+  curl                # Requêtes HTTP en ligne de commande
+  wget                # Téléchargement HTTP
+  gh                  # CLI GitHub pour gérer les dépôts GitHub directement depuis le terminal
+  gitleaks            # Détection de secrets dans Git
+  httpie              # Alternative plus lisible à curl
+  ghostty             # Terminal moderne
+  eza                 # Meilleur `ls` pour un affichage enrichi avec icônes et couleurs
+  bat                 # Meilleur `cat` avec coloration syntaxique et meilleure lisibilité des fichiers
+  fd                  # Recherche rapide et efficace de fichiers, alternative à `find`
+  ripgrep             # Recherche de texte ultra-rapide dans des fichiers, alternative à `grep`
+  btop                # Moniteur système avec une interface graphique très claire
+  tldr                # Résumés simplifiés des pages man pour une consultation rapide
+  atuin               # Historique de commande avancé avec synchronisation optionnelle
+  starship            # Invite de commande rapide et hautement personnalisable
+  yazi                # Gestionnaire de fichiers en terminal avec interface moderne
+  mprocs              # Gestion de plusieurs processus dans le terminal
+
+  # ─────────────────────────────────────────────────────
+  # VIRTUALISATION & CONTAINERS
+  # ─────────────────────────────────────────────────────
+  qemu                # Virtualisation KVM/QEMU
+  virt-manager        # Interface graphique pour gérer QEMU et libvirt
+  virt-viewer         # Visionneuse VM
+  libvirt             # Gestionnaire de virtualisation
+  ollama              # Exécution de modèles IA locaux
+  docker-compose      # Orchestration de containers Docker
+  nvidia-container-toolkit # Support NVIDIA pour containers
+  nvidia-docker       # Docker avec GPU NVIDIA
+  kubernetes          # Orchestration avancée
+  minikube            # Kubernetes en local
+  podman              # Alternative à Docker en mode rootless
+  stern               # Logs en temps réel pour Kubernetes
+  k9s                 # Interface CLI puissante pour gérer Kubernetes
+
+  # ─────────────────────────────────────────────────────
+  # NAVIGATION & COMMUNICATION
+  # ─────────────────────────────────────────────────────
+  librewolf           # Fork de Firefox, axé sur la vie privée
+  (discord.override { withVencord = true; }) # Discord + Vencord
+  element-desktop     # Client Matrix
+  parsec-bin          # Remote Desktop Gaming
+  ngrok               # Tunnel réseau sécurisé
+
+  # ─────────────────────────────────────────────────────
+  # GAMING
+  # ─────────────────────────────────────────────────────
+  lutris              # Gestion des jeux sous Linux
+  osu-lazer           # Version open-source de Osu!
+  prismlauncher       # Minecraft launcher alternatif
+
+  # ─────────────────────────────────────────────────────
+  # OUTILS ANDROID & MOBILE
+  # ─────────────────────────────────────────────────────
+  android-tools       # ADB & Fastboot pour Android
 ];
+
+
 
 
   ##########################

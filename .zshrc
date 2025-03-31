@@ -1,37 +1,32 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+# ⚡ Instant prompt pour Powerlevel10k (doit être en haut)
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-if [[ -f "/opt/homebrew/bin/brew" ]] then
-  # If you're using macOS, you'll want this enabled
+# 📌 Homebrew (si sur macOS)
+if [[ -f "/opt/homebrew/bin/brew" ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# Set the directory we want to store zinit and plugins
+# 🔹 Zinit (Gestion des plugins Zsh)
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-
-# Download Zinit, if it's not there yet
-if [ ! -d "$ZINIT_HOME" ]; then
-   mkdir -p "$(dirname $ZINIT_HOME)"
+if [[ ! -d "$ZINIT_HOME" ]]; then
+   mkdir -p "$(dirname "$ZINIT_HOME")"
    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
-
-# Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
-# Add in Powerlevel10k
+# 🔥 Thème Powerlevel10k
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-# Add in zsh plugins
+# 🔧 Plugins Zsh
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
+zinit light zsh-users/zsh-history-substring-search
 
-# Add in snippets
+# 🔹 Plugins OMZ (Oh My Zsh)
 zinit snippet OMZL::git.zsh
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
@@ -41,24 +36,23 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 
-# Load completions
-autoload -Uz compinit && compinit
+# 🚀 Chargement des complétions (accélération)
+autoload -Uz compinit
+if [[ -z "$ZSH_COMPDUMP" ]]; then
+  ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
+fi
+compinit -d "$ZSH_COMPDUMP"
 
+# ⚡ Chargement des plugins Zinit en différé
 zinit cdreplay -q
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# 🎨 Powerlevel10k config
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Keybindings
-bindkey -e
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
-bindkey '^[w' kill-region
-
-# History
-HISTSIZE=5000
+# 🏆 Historique optimisé
+HISTSIZE=10000
+SAVEHIST=10000
 HISTFILE=~/.zsh_history
-SAVEHIST=$HISTSIZE
 HISTDUP=erase
 setopt appendhistory
 setopt sharehistory
@@ -67,41 +61,61 @@ setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
+setopt extended_history
 
-# Completion styling
+# 🏹 Keybindings (navigation dans l'historique avec flèches)
+bindkey -e
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+bindkey '^[w' kill-region
+
+# 🔍 Completions avancées
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-# Aliases
+# 🚀 Aliases améliorés
 alias ls='exa --icons --color=auto'
 alias vim='nvim'
 alias c='clear'
+alias cat='bat'
+alias find='fd'
+alias grep='rg'
+alias man='tldr'
+alias top='btop'
+alias systeminfo='fastfetch'
+alias h='history'
+alias e='exit'
+alias nix-fmt="nixpkgs-fmt"
+alias nix-update="nix-channel --update && nix-env -u '*'"
+alias nix-gc="nix-collect-garbage -d"
+alias history="atuin history list"
 
-# Shell integrations
+# 🚀 Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
-export PATH=$PATH:/nix/store/rq7gna8i0sybj3knxh4zn6hysbsy9xjy-ghostty-1.0.1/bin
-export PKG_CONFIG_PATH=/nix/store/5a1i753fvf4124d0z96z1gdny54a5pk5-alsa-lib-1.2.12-dev/lib/pkgconfig:$PKG_CONFIG_PATH
-export PKG_CONFIG_PATH=/nix/store/vvjw3qra3bq198alp4wfbx52g46hvh0b-systemd-257.2-dev/lib/pkgconfig:$PKG_CONFIG_PATH
-export PKG_CONFIG_PATH=/nix/store/73cqf7hqf4mwc3pbmgkpyl473bahn3s4-openssl-3.3.2-dev/lib/pkgconfig:$PKG_CONFIG_PATH
-export PKG_CONFIG_PATH=~/.local/pkgconfig:/run/current-system/sw/lib/pkgconfig:$PKG_CONFIG_PATH
+# 📌 PATH amélioré (groupé pour éviter les répétitions)
+export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:/home/dedsec/.bun/bin:$PATH"
+export PATH="/nix/store/rq7gna8i0sybj3knxh4zn6hysbsy9xjy-ghostty-1.0.1/bin:$PATH"
 
+# 📌 PKG_CONFIG_PATH amélioré
+export PKG_CONFIG_PATH="
+  ~/.local/pkgconfig:
+  /run/current-system/sw/lib/pkgconfig:
+  /nix/store/5a1i753fvf4124d0z96z1gdny54a5pk5-alsa-lib-1.2.12-dev/lib/pkgconfig:
+  /nix/store/vvjw3qra3bq198alp4wfbx52g46hvh0b-systemd-257.2-dev/lib/pkgconfig:
+  /nix/store/73cqf7hqf4mwc3pbmgkpyl473bahn3s4-openssl-3.3.2-dev/lib/pkgconfig:
+  $PKG_CONFIG_PATH"
 
-export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
-export PATH="/home/dedsec/.bun/bin:$PATH"
-FPATH=~/.rbenv/completions:"$FPATH"
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
-
-autoload -U compinit
-compinit
-
-fpath=($HOME/.zsh_completions $fpath)
-
-# Load Angular CLI autocompletion.
+# ⚡ Angular & Kubernetes autocompletion
 source <(ng completion script)
 source <(kubectl completion zsh)
 
+# 🎯 Ajout du fpath pour les complétions personnalisées
+fpath=($HOME/.zsh_completions $fpath)
+
+export ATUIN_CONFIG="$HOME/.config/atuin/config.toml"
+eval "$(atuin init zsh)"
