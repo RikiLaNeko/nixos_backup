@@ -80,18 +80,21 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 alias ls='exa --icons --color=auto'
 alias vim='nvim'
 alias c='clear'
+alias h='history'
+alias e='exit'
 alias cat='bat'
 alias find='fd'
 alias grep='rg'
 alias man='tldr'
 alias top='btop'
 alias systeminfo='fastfetch'
-alias h='history'
-alias e='exit'
+alias history="atuin history list"
+
+# ❄️ Aliases spésifique a NixOS
 alias nix-fmt="nixpkgs-fmt"
 alias nix-update="nix-channel --update && nix-env -u '*'"
 alias nix-gc="nix-collect-garbage -d"
-alias history="atuin history list"
+
 
 # 🚀 Shell integrations
 eval "$(fzf --zsh)"
