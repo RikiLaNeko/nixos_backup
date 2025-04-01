@@ -25,6 +25,9 @@ zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 zinit light zsh-users/zsh-history-substring-search
+zinit light hlissner/zsh-autopair
+zinit light chrissicool/zsh-256color
+zinit light MichaelAquilina/zsh-you-should-use
 
 # 🔹 Plugins OMZ (Oh My Zsh)
 zinit snippet OMZL::git.zsh
@@ -35,6 +38,15 @@ zinit snippet OMZP::aws
 zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
+zinit snippet OMZP::docker
+zinit snippet OMZP::docker-compose
+zinit snippet OMZP::gradle
+zinit snippet OMZP::mvn
+zinit snippet OMZP::systemd
+zinit snippet OMZP::tmux
+zinit snippet OMZL::functions.zsh
+zinit snippet OMZP::web-search
+
 
 # 🚀 Chargement des complétions (accélération)
 autoload -Uz compinit
@@ -89,6 +101,7 @@ alias man='tldr'
 alias top='btop'
 alias systeminfo='fastfetch'
 alias history="atuin history list"
+alias code="codium ."
 
 # ❄️ Aliases spésifique a NixOS
 alias nix-fmt="nixpkgs-fmt"
@@ -113,6 +126,11 @@ export PKG_CONFIG_PATH="
   /nix/store/73cqf7hqf4mwc3pbmgkpyl473bahn3s4-openssl-3.3.2-dev/lib/pkgconfig:
   $PKG_CONFIG_PATH"
 
+# 📌 LDFLAGS amélioré
+export EDITOR=nvim
+export VISUAL=nvim
+
+  
 # ⚡ Angular & Kubernetes autocompletion
 source <(ng completion script)
 source <(kubectl completion zsh)

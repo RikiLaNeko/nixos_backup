@@ -228,18 +228,49 @@ local default_plugins = {
     end,
   },
 
-   {
-    "github/copilot.vim", 
+  {
+    "github/copilot.vim",
     lazy = false,
   },
 
   {
-  "NeogitOrg/neogit",
+    "NeogitOrg/neogit",
     lazy = false,
   },
 
+  {
+    "rmagatti/auto-session",
+    lazy = false,
+  },
 
-  
+  {
+    "j-hui/fidget.nvim",
+    event = "User FilePost",
+    config = function()
+      require("fidget").setup {}
+    end,
+  },
+
+  {
+    { "mfussenegger/nvim-dap", lazy = false },
+    {
+      "rcarriga/nvim-dap-ui",
+      dependencies = { "mfussenegger/nvim-dap" },
+      config = function()
+        require("dapui").setup()
+      end,
+    },
+  },
+
+  { 
+    "iamcco/markdown-preview.nvim", 
+    ft = { "markdown" }, 
+    build = "cd app && bun install" 
+  },
+  { 
+    "dhruvasagar/vim-table-mode",
+    cmd = "TableModeToggle"
+  },
 
   -- Only load whichkey after all the gui
   {

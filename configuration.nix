@@ -38,17 +38,6 @@
     hostName = "dedsec-nixos";
     networkmanager.enable = true;
 
-    #bridges = {
-    #  br0 = {
-    #    interfaces = [ "eno1" ];
-    #  };
-    #};
-
-    #interfaces = {
-    #  br0 = {
-    #    useDHCP = true;
-    #  };
-    #};
 
   };
 
@@ -257,6 +246,10 @@ environment.systemPackages = with pkgs; [
   starship            # Invite de commande rapide et hautement personnalisable
   yazi                # Gestionnaire de fichiers en terminal avec interface moderne
   mprocs              # Gestion de plusieurs processus dans le terminal
+  hugo
+  zoxide
+  teams-for-linux
+
 
   # ─────────────────────────────────────────────────────
   # VIRTUALISATION & CONTAINERS
@@ -303,6 +296,59 @@ environment.systemPackages = with pkgs; [
   ##########################
   # Services Spécifiques   #
   ##########################
+
+  systemd.services.postgresql = {
+
+
+
+    description = "PostgreSQL Database Server";
+
+
+    wantedBy = [ "multi-user.target" ];
+
+
+    after = [ "network.target" ];
+
+
+    serviceConfig = {
+
+
+      ExecStart = "/run/current-system/sw/bin/postgres -D /var/lib/postgresql/data";
+
+
+      ExecReload = "/run/current-system/sw/bin/pg_ctl reload -D /var/lib/postgresql/data";
+
+
+      ExecStop = "/run/current-system/sw/bin/pg_ctl stop -D /var/lib/postgresql/data";
+
+
+      Restart = "always";
+
+
+      User = "postgres";
+
+
+      Group = "postgres";
+
+
+      Environment = [
+
+
+        "PGDATA=/var/lib/postgresql/data"
+
+
+        "PGPORT=5432"
+
+
+      ];
+
+
+    };
+
+
+  };
+
+
   systemd.services.kvm-api = {
     serviceConfig = {
       User = "dedsec";
@@ -328,6 +374,8 @@ environment.systemPackages = with pkgs; [
 
   systemd.tmpfiles.rules = [
     "d /var/lib/libvirt/images 0770 root libvirtd -"
+    "d /var/lib/postgresql 0700 postgres postgres -"
+    "d /run/postgresql 0755 postgres postgres -"
   ];
 
   ##########################
