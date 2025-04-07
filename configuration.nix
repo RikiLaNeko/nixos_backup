@@ -259,7 +259,6 @@ environment.systemPackages = with pkgs; [
   postgresql.lib       # Bibliothèque PostgreSQL pour les applications C/C++ et autres
   sqlite               # Base de données légère, utilisée dans les applications mobiles ou embarquées
   redis                # Cache / stockage en RAM pour des performances accrues
-  mongodb              # Base de données NoSQL orientée documents
 
   # ─────────────────────────────────────────────────────
   # OUTILS CLI & SHELL
@@ -288,7 +287,8 @@ environment.systemPackages = with pkgs; [
   tree                 # Affichage récursif des dossiers
   nmap                 # Scanner de ports réseau
   fastfetch            # Affichage d'informations système avec style || nouveau neofetch
-  taskwarrior          # Gestionnaire de tâches en CLI hautement configurable avec gestion de priorités et échéances
+  taskwarrior3         # Gestionnaire de tâches en CLI hautement configurable avec gestion de priorités et échéances
+  jenkins              # Extendable open source continuous integration server 
 
   # ─────────────────────────────────────────────────────
   # VIRTUALISATION & CONTAINERS
