@@ -13,6 +13,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.blacklistedKernelModules = [ "nouveau" ];
+  boot.kernelParams = [ "intel_iommu=on" ];
   security.polkit.enable = true;
 
   ##########################
@@ -30,6 +31,7 @@
       default-runtime = "nvidia";
     };
   };
+
 
   ##########################
   # Réseau & Proxy         #
@@ -138,156 +140,236 @@
   };
 
 
-
 ##########################
 # Paquets Système        #
 ##########################
 environment.systemPackages = with pkgs; [
   # ─────────────────────────────────────────────────────
+  # SYSTÈME & UTILITAIRES
+  # ─────────────────────────────────────────────────────
+  refind               # Gestionnaire de démarrage pour systèmes UEFI
+  pciutils             # Outils d'interrogation de bus PCI
+  dnsmasq              # Serveur DNS et DHCP léger
+  nbd                  # Network Block Device
+  virtiofsd            # Démon pour le partage de fichiers virtio
+  unzip                # Décompression de fichiers ZIP
+  zip                  # Compression de fichiers ZIP
+  xdotool              # Automatisation de clavier et souris X11
+
+  # ─────────────────────────────────────────────────────
   # ÉDITEURS DE TEXTE & IDE
   # ─────────────────────────────────────────────────────
-  neovim              # Éditeur de texte léger et rapide, avec de nombreuses extensions et personnalisations
-  vscode              # Visual Studio Code (IDE polyvalent) avec support d'extensions variées
-  jetbrains-toolbox   # Gestionnaire des IDE JetBrains (IntelliJ IDEA, PyCharm, etc.)
-  godot_4             # Moteur de jeu Godot 4, open source pour la création de jeux vidéo
+  neovim               # Éditeur de texte léger et rapide, avec de nombreuses extensions
+  vscode               # Visual Studio Code (IDE polyvalent) avec support d'extensions
+  jetbrains-toolbox    # Gestionnaire des IDE JetBrains (IntelliJ IDEA, PyCharm, etc.)
+  obsidian             # Gestionnaire de notes et base de connaissances
 
   # ─────────────────────────────────────────────────────
   # OUTILS DE DÉVELOPPEMENT
   # ─────────────────────────────────────────────────────
   ## Gestion des versions et dépendances
-  git                 # Gestionnaire de versions Git pour le contrôle de source
-  pkg-config          # Outil pour gérer les dépendances C/C++ via des fichiers de configuration
-  readline            # Gestion des entrées en ligne de commande pour une meilleure UX
-  openssl             # Bibliothèque de chiffrement, utilisée dans la sécurité des applications
-  libffi              # Interface d'appel de fonctions C pour les bindings entre langages
-  libyaml             # Librairie pour parser et écrire du YAML, très utilisé dans les configurations
-  zlib                # Compression des données, utilisée par de nombreux outils et applications
+  git                  # Gestionnaire de versions Git pour le contrôle de source
+  pkg-config           # Outil pour gérer les dépendances C/C++ via des fichiers de configuration
+  readline             # Gestion des entrées en ligne de commande pour une meilleure UX
+  openssl              # Bibliothèque de chiffrement, utilisée dans la sécurité des applications
+  libffi               # Interface d'appel de fonctions C pour les bindings entre langages
+  libyaml              # Librairie pour parser et écrire du YAML, très utilisé dans les configurations
+  zlib                 # Compression des données, utilisée par de nombreux outils et applications
+  gtk3                 # Toolkit d'interface graphique
+  webkitgtk            # Moteur de rendu web pour GTK
+  nsis                 # Installateur pour Windows
+  upx                  # Compresseur d'exécutables
+
+  ## Compilation et outils de build
+  gcc                  # Compilateur C/C++, l'un des plus utilisés
+  gnumake              # Makefile, utile pour automatiser les tâches de build
+  cmake                # Outil de build C++ multiplateforme
 
   ## Langages de programmation
   ### JavaScript / TypeScript
-  nodejs              # Runtime JS pour exécuter des applications JavaScript côté serveur
-  bun                 # Runtime JS alternatif plus rapide, incluant un bundler et un gestionnaire de paquets
+  nodejs               # Runtime JS pour exécuter des applications JavaScript côté serveur
+  bun                  # Runtime JS alternatif plus rapide, incluant un bundler et un gestionnaire de paquets
 
   ### Java, Kotlin & Spring
-  jdk8                # Java Development Kit 8 (legacy), pour les applications Java anciennes
-  jdk17               # Java Development Kit 17 (LTS), version stable et à long terme
-  jdk21               # Java Development Kit 21 (dernier stable), dernière version de Java
-  kotlin              # Langage Kotlin pour le développement moderne et multiplateforme
-  gradle              # Outil de build pour JVM, avec support Kotlin, Groovy et autres
-  maven               # Gestionnaire de dépendances Java, utilisé dans de nombreux projets Java
-  spring-boot-cli     # CLI pour Spring Boot, simplifie le démarrage d'applications Spring
+  jdk8                 # Java Development Kit 8 (legacy), pour les applications Java anciennes
+  jdk17                # Java Development Kit 17 (LTS), version stable et à long terme
+  jdk21                # Java Development Kit 21 (dernier stable), dernière version de Java
+  kotlin               # Langage Kotlin pour le développement moderne et multiplateforme
+  gradle               # Outil de build pour JVM, avec support Kotlin, Groovy et autres
+  maven                # Gestionnaire de dépendances Java, utilisé dans de nombreux projets Java
+  spring-boot-cli      # CLI pour Spring Boot, simplifie le démarrage d'applications Spring
 
   ### Go
-  go                  # Langage Go, connu pour sa simplicité et ses performances élevées
-  air                 # Hot reload pour Go, permet de recharger automatiquement les applications Go pendant le développement
+  go                   # Langage Go, connu pour sa simplicité et ses performances élevées
+  air                  # Hot reload pour Go, permet de recharger automatiquement les applications Go
+  wails                # Framework pour créer des applications desktop avec Go et Web Technologies
 
   ### Rust
-  rustup              # Gestionnaire Rust pour gérer les versions et les outils Rust
+  rustup               # Gestionnaire Rust pour gérer les versions et les outils Rust
+  rustc                # Compilateur Rust
+  cargo-tauri          # Framework pour créer des applications desktop avec Rust et Web Technologies
 
   ### Zig
-  zig                 # Langage Zig, connu pour sa performance et sa gestion manuelle de la mémoire
+  zig                  # Langage Zig, connu pour sa performance et sa gestion manuelle de la mémoire
 
   ### Assembleur
-  nasm                # Assembleur x86, utilisé pour écrire du code bas niveau performant
+  nasm                 # Assembleur x86, utilisé pour écrire du code bas niveau performant
 
   ### PHP & Laravel
-  php                 # PHP, langage populaire pour le développement web
-  laravel             # Framework Laravel, connu pour sa simplicité et ses bonnes pratiques en PHP
+  php                  # PHP, langage populaire pour le développement web
+  laravel              # Framework Laravel, connu pour sa simplicité et ses bonnes pratiques en PHP
 
   ### Ruby & Rails
-  ruby                # Ruby, langage de programmation dynamique
-  rbenv               # Gestionnaire de versions Ruby pour faciliter la gestion de plusieurs versions de Ruby
+  ruby                 # Ruby, langage de programmation dynamique
+  rbenv                # Gestionnaire de versions Ruby pour faciliter la gestion de plusieurs versions
+
+  ### Python
+  python3              # Python 3, très utilisé pour le développement de scripts et d'applications
+  python3Packages.pip  # Gestionnaire de paquets Python
+  python3Packages.virtualenv # Environnements virtuels pour Python
+
+  ### C#
+  mono                 # Implémentation open-source de .NET
+  dotnet-sdk           # SDK officiel pour .NET, nécessaire au développement en C#
 
   ## Développement Mobile
-  flutter             # SDK Flutter pour le développement mobile multiplateforme
-
-  ## Compilation et outils de build
-  gcc                 # Compilateur C/C++, l'un des plus utilisés
-  gnumake             # Makefile, utile pour automatiser les tâches de build
-  cmake               # Outil de build C++ multiplateforme
-
-  ## Python
-  python3             # Python 3, très utilisé pour le développement de scripts et d'applications
+  flutter              # SDK Flutter pour le développement mobile multiplateforme
 
   ## Outils de développement Nix
-  nixpkgs-fmt         # Formatage de fichiers Nix
-  nixd                # Serveur LSP pour le langage Nix, utile pour l'édition de fichiers .nix
-  devbox              # Gestion simplifiée des environnements de développement
-  direnv              # Chargement automatique des variables d’environnement par projet
-  just                # Alternative moderne à Makefile pour automatiser des tâches
-  difftastic          # Diff amélioré avec reconnaissance syntaxique
+  nixpkgs-fmt          # Formatage de fichiers Nix
+  nixd                 # Serveur LSP pour le langage Nix, utile pour l'édition de fichiers .nix
+  devbox               # Gestion simplifiée des environnements de développement
+  direnv               # Chargement automatique des variables d'environnement par projet
+  just                 # Alternative moderne à Makefile pour automatiser des tâches
+  difftastic           # Diff amélioré avec reconnaissance syntaxique
+
+  # ─────────────────────────────────────────────────────
+  # MOTEURS & OUTILS DE DÉVELOPPEMENT DE JEUX
+  # ─────────────────────────────────────────────────────
+  godot_4              # Moteur de jeu Godot 4, open source pour la création de jeux vidéo
+  unityhub             # Gestionnaire Unity
+  scenebuilder         # Outil pour créer des interfaces JavaFX
+  blender              # Modélisation 3D, animation et rendu
+  gimp                 # Édition d'images et création graphique
 
   # ─────────────────────────────────────────────────────
   # BASES DE DONNÉES
   # ─────────────────────────────────────────────────────
-  postgresql          # SGBD relationnel Open Source, robuste et largement utilisé
-  postgresql.lib      # Bibliothèque PostgreSQL pour les applications C/C++ et autres
-  sqlite              # Base de données légère, utilisée dans les applications mobiles ou embarquées
-  redis               # Cache / stockage en RAM pour des performances accrues
+  postgresql           # SGBD relationnel Open Source, robuste et largement utilisé
+  postgresql.lib       # Bibliothèque PostgreSQL pour les applications C/C++ et autres
+  sqlite               # Base de données légère, utilisée dans les applications mobiles ou embarquées
+  redis                # Cache / stockage en RAM pour des performances accrues
+  mongodb              # Base de données NoSQL orientée documents
 
   # ─────────────────────────────────────────────────────
   # OUTILS CLI & SHELL
   # ─────────────────────────────────────────────────────
-  tmux                # Multiplexeur de terminaux, permet de gérer plusieurs sessions dans un terminal
-  fzf                 # Recherche floue dans le terminal, améliore l'efficacité de navigation
-  curl                # Requêtes HTTP en ligne de commande
-  wget                # Téléchargement HTTP
-  gh                  # CLI GitHub pour gérer les dépôts GitHub directement depuis le terminal
-  gitleaks            # Détection de secrets dans Git
-  httpie              # Alternative plus lisible à curl
-  ghostty             # Terminal moderne
-  eza                 # Meilleur `ls` pour un affichage enrichi avec icônes et couleurs
-  bat                 # Meilleur `cat` avec coloration syntaxique et meilleure lisibilité des fichiers
-  fd                  # Recherche rapide et efficace de fichiers, alternative à `find`
-  ripgrep             # Recherche de texte ultra-rapide dans des fichiers, alternative à `grep`
-  btop                # Moniteur système avec une interface graphique très claire
-  tldr                # Résumés simplifiés des pages man pour une consultation rapide
-  atuin               # Historique de commande avancé avec synchronisation optionnelle
-  starship            # Invite de commande rapide et hautement personnalisable
-  yazi                # Gestionnaire de fichiers en terminal avec interface moderne
-  mprocs              # Gestion de plusieurs processus dans le terminal
-  hugo
-  zoxide
-  teams-for-linux
-
+  tmux                 # Multiplexeur de terminaux, permet de gérer plusieurs sessions (Gardée le temps de s'habituée a zellij)
+  zellij               # Alternative moderne à tmux avec interfaces tiling, modes et plugins. Écrit en Rust avec une meilleure UX
+  fzf                  # Recherche floue dans le terminal, améliore l'efficacité de navigation
+  curl                 # Requêtes HTTP en ligne de commande
+  wget                 # Téléchargement HTTP
+  gh                   # CLI GitHub pour gérer les dépôts GitHub directement depuis le terminal
+  gitleaks             # Détection de secrets dans Git
+  httpie               # Alternative plus lisible à curl
+  ghostty              # Terminal moderne
+  eza                  # Meilleur `ls` pour un affichage enrichi avec icônes et couleurs
+  bat                  # Meilleur `cat` avec coloration syntaxique et meilleure lisibilité
+  fd                   # Recherche rapide et efficace de fichiers, alternative à `find`
+  ripgrep              # Recherche de texte ultra-rapide dans des fichiers, alternative à `grep`
+  btop                 # Moniteur système avec une interface graphique très claire
+  tldr                 # Résumés simplifiés des pages man pour une consultation rapide
+  atuin                # Historique de commande avancé avec synchronisation optionnelle
+  yazi                 # Gestionnaire de fichiers en terminal avec interface moderne
+  mprocs               # Gestion de plusieurs processus dans le terminal
+  hugo                 # Générateur de sites statiques rapide
+  zoxide               # Navigation rapide entre dossiers
+  jq                   # Traitement de données JSON en ligne de commande
+  tree                 # Affichage récursif des dossiers
+  nmap                 # Scanner de ports réseau
+  fastfetch            # Affichage d'informations système avec style || nouveau neofetch
+  taskwarrior          # Gestionnaire de tâches en CLI hautement configurable avec gestion de priorités et échéances
 
   # ─────────────────────────────────────────────────────
   # VIRTUALISATION & CONTAINERS
   # ─────────────────────────────────────────────────────
-  qemu                # Virtualisation KVM/QEMU
-  virt-manager        # Interface graphique pour gérer QEMU et libvirt
-  virt-viewer         # Visionneuse VM
-  libvirt             # Gestionnaire de virtualisation
-  ollama              # Exécution de modèles IA locaux
-  docker-compose      # Orchestration de containers Docker
-  nvidia-container-toolkit # Support NVIDIA pour containers
-  nvidia-docker       # Docker avec GPU NVIDIA
-  kubernetes          # Orchestration avancée
-  minikube            # Kubernetes en local
-  podman              # Alternative à Docker en mode rootless
-  stern               # Logs en temps réel pour Kubernetes
-  k9s                 # Interface CLI puissante pour gérer Kubernetes
+  qemu_full            # Émulateur et virtualisation matérielle
+  virt-manager         # Interface graphique pour gérer les machines virtuelles avec libvirt
+  virt-viewer          # Visionneuse pour se connecter aux machines virtuelles
+  libvirt              # Bibliothèque et outil CLI pour gérer les machines virtuelles
+  ollama               # Gestionnaire de modèles LLM en local
+  docker-compose       # Orchestration de conteneurs Docker
+  nvidia-container-toolkit # Outils pour exécuter des conteneurs GPU avec NVIDIA
+  nvidia-docker        # Extension Docker pour l'accélération GPU
+  kubernetes           # Orchestration de conteneurs à grande échelle
+  minikube             # Exécution locale d'un cluster Kubernetes
+  podman               # Alternative à Docker sans démon centralisé
+  stern                # Affichage des logs de plusieurs pods Kubernetes en temps réel
+  k9s                  # Interface en terminal pour gérer Kubernetes
 
   # ─────────────────────────────────────────────────────
   # NAVIGATION & COMMUNICATION
   # ─────────────────────────────────────────────────────
-  librewolf           # Fork de Firefox, axé sur la vie privée
+  librewolf            # Fork de Firefox, axé sur la vie privée
   (discord.override { withVencord = true; }) # Discord + Vencord
-  element-desktop     # Client Matrix
-  parsec-bin          # Remote Desktop Gaming
-  ngrok               # Tunnel réseau sécurisé
+  element-desktop      # Client Matrix
+  parsec-bin           # Remote Desktop Gaming
+  teams-for-linux      # Client non officiel de Microsoft Teams pour Linux
+  simplex-chat-desktop # Client de messagerie privée
+  calibre              # Gestion d'e-books et bibliothèque numérique
 
   # ─────────────────────────────────────────────────────
   # GAMING
   # ─────────────────────────────────────────────────────
-  lutris              # Gestion des jeux sous Linux
-  osu-lazer           # Version open-source de Osu!
-  prismlauncher       # Minecraft launcher alternatif
+  lutris               # Gestion des jeux sous Linux
+  osu-lazer            # Version open-source de Osu!
+  prismlauncher        # Minecraft launcher alternatif
+  heroic               # Client pour Epic Games & GOG sur Linux
+  wine                 # Couche de compatibilité Windows
+  steam                # Plateforme de jeux
+  gamemode             # Optimisations pour les jeux
+
+  # ─────────────────────────────────────────────────────
+  # AUDIO & MULTIMÉDIA
+  # ─────────────────────────────────────────────────────
+  lmms                 # Station audionumérique pour la création musicale
+  clementine           # Lecteur audio avancé
+  scdl                 # Téléchargement de musiques SoundCloud
+  ffmpeg               # Outil de traitement et conversion audio/vidéo
+  vlc                  # Lecteur multimédia polyvalent
+  mpv                  # Lecteur vidéo minimaliste
+  audacity             # Éditeur audio
+
+  # Codecs et bibliothèques multimédia
+  gst_all_1.gstreamer
+  gst_all_1.gst-plugins-base
+  gst_all_1.gst-plugins-good
+  gst_all_1.gst-plugins-bad
+  gst_all_1.gst-plugins-ugly
+
+  # ─────────────────────────────────────────────────────
+  # LAZY
+  # ─────────────────────────────────────────────────────
+  lazygit              # Interface TUI pour Git avec visualisation de branches, gestion de commits et résolution de conflits
+  lazydocker           # Gestionnaire de conteneurs Docker en TUI avec monitoring de ressources et logs en temps réel
+  lazysql              # Interface TUI pour bases de données SQL avec visualisation des données et édition simplifiée
+
+
+
+  # ─────────────────────────────────────────────────────
+  # RÉSEAU & ACCÈS DISTANT
+  # ─────────────────────────────────────────────────────
+  ngrok                # Tunnel réseau sécurisé
+  wireguard-tools      # VPN moderne et sécurisé
+  openvpn              # Solution VPN classique
+  sshfs                # Montage de systèmes de fichiers via SSH
+  filezilla            # Client FTP/SFTP graphique
 
   # ─────────────────────────────────────────────────────
   # OUTILS ANDROID & MOBILE
   # ─────────────────────────────────────────────────────
-  android-tools       # ADB & Fastboot pour Android
+  android-tools        # ADB & Fastboot pour Android
+  scrcpy               # Affichage et contrôle d'appareils Android
 ];
 
 

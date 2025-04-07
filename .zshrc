@@ -140,3 +140,11 @@ fpath=($HOME/.zsh_completions $fpath)
 
 export ATUIN_CONFIG="$HOME/.config/atuin/config.toml"
 eval "$(atuin init zsh)"
+alias OSX="~/Téléchargements/OSX-KVM-lite/OpenCore-Boot.sh" 
+
+
+alias OSX="~/OSX-KVM/OpenCore-Boot.sh"
+alias OSX="~/OSX-KVM/OpenCore-Boot.sh"
+alias OSX="~/OSX-KVM/OpenCore-Boot.sh"
+alias OSX="~/OSX-KVM/OpenCore-Boot.sh"
+alias OSX="~/OSX-KVM/OpenCore-Boot.sh"
