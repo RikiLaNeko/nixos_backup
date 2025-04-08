@@ -90,22 +90,44 @@
     LC_TIME = "fr_FR.UTF-8";
   };
 
-  ##########################
-  # X11 & Affichage        #
-  ##########################
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "nvidia" ];
-    libinput.enable = true;
-    xkb = {
-      layout = "fr";
-      variant = "";
-    };
+##########################
+# X11 & Affichage        #
+##########################
+services.xserver = {
+  enable = true;
+  videoDrivers = [ "nvidia" ];
+  libinput.enable = true;
+  xkb = {
+    layout = "fr";
+    variant = "";
   };
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-  console.keyMap = "fr";
+};
 
+# Désactivation de Plasma 6
+services.desktopManager.plasma6.enable = false;
+
+# Désactivation de SDDM
+services.displayManager.sddm.enable = false;
+
+# Activation de Ly comme gestionnaire de connexion
+services.displayManager.ly = {
+  enable = true;
+  settings = {
+    # Configuration optionnelle de Ly
+    animate = true;
+    hide_borders = true;
+    # Définir Hyprland comme environnement par défaut
+    defaultDE = "Hyprland";
+  };
+};
+
+# Activation de Hyprland
+programs.hyprland = {
+  enable = true;
+  xwayland.enable = true;  # Pour la compatibilité avec les applications X11
+};
+
+console.keyMap = "fr";
   ##########################
   # Audio & Son            #
   ##########################
@@ -155,6 +177,12 @@ environment.systemPackages = with pkgs; [
   unzip                # Décompression de fichiers ZIP
   zip                  # Compression de fichiers ZIP
   xdotool              # Automatisation de clavier et souris X11
+  ly
+  waybar         # Barre d'état
+  wofi           # Lanceur d'applications
+  swww           # Gestionnaire de fond d'écran
+  wl-clipboard   # Gestionnaire de presse-papier
+  hyprpaper      # Alternative pour les fonds d'écran
 
   # ─────────────────────────────────────────────────────
   # ÉDITEURS DE TEXTE & IDE
@@ -490,6 +518,11 @@ environment.systemPackages = with pkgs; [
   nixpkgs.config = {
     allowUnfree = true;
     experimental-features = "nix-command flakes";
+  };
+
+  environment.variables = {
+    TERMINAL = "ghostty";
+  DEFAULT_TERM = "ghostty";
   };
 
   ##########################
