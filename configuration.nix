@@ -200,6 +200,7 @@ fonts.packages = with pkgs; [
   cava
   fortune
   grim
+  slurp
 
     # ─────────────────────────────────────────────────────
     # ÉDITEURS DE TEXTE & IDE
