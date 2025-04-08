@@ -145,6 +145,6 @@ fpath=($HOME/.zsh_completions $fpath)
 export ATUIN_CONFIG="$HOME/.config/atuin/config.toml"
 eval "$(atuin init zsh)"
 
-exec  ~/Code/Bash/fortune_cowsay.sh &!
+exec  /home/dedsec/Code/Bash/fortune_cowsay.sh &!
 
 
