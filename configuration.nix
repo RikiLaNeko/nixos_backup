@@ -194,6 +194,12 @@ fonts.packages = with pkgs; [
     pacman
     bluetui
   brightnessctl
+  neo-cowsay
+  figlet
+  sl
+  cava
+  fortune
+  grim
 
     # ─────────────────────────────────────────────────────
     # ÉDITEURS DE TEXTE & IDE

@@ -1,7 +1,13 @@
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # ⚡ Instant prompt pour Powerlevel10k (doit être en haut)
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+if ! (( $+functions[instant_prompt_done_callback] )); then
+  functions[instant_prompt_done_callback]=${functions[instant_prompt_done_callback]:-instant_prompt_done_callback}
+fi
+
 
 # 📌 Homebrew (si sur macOS)
 if [[ -f "/opt/homebrew/bin/brew" ]]; then
@@ -28,6 +34,7 @@ zinit light zsh-users/zsh-history-substring-search
 zinit light hlissner/zsh-autopair
 zinit light chrissicool/zsh-256color
 zinit light MichaelAquilina/zsh-you-should-use
+zinit light romkatv/zsh-defer
 
 # 🔹 Plugins OMZ (Oh My Zsh)
 zinit snippet OMZL::git.zsh
@@ -46,7 +53,6 @@ zinit snippet OMZP::systemd
 zinit snippet OMZP::tmux
 zinit snippet OMZL::functions.zsh
 zinit snippet OMZP::web-search
-
 
 # 🚀 Chargement des complétions (accélération)
 autoload -Uz compinit
@@ -108,7 +114,6 @@ alias nix-fmt="nixpkgs-fmt"
 alias nix-update="nix-channel --update && nix-env -u '*'"
 alias nix-gc="nix-collect-garbage -d"
 
-
 # 🚀 Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
@@ -130,8 +135,7 @@ export PKG_CONFIG_PATH="
 export EDITOR=nvim
 export VISUAL=nvim
 
-  
-# ⚡ Angular & Kubernetes autocompletion
+#⚡ Angular & Kubernetes autocompletion
 source <(ng completion script)
 source <(kubectl completion zsh)
 
@@ -140,11 +144,7 @@ fpath=($HOME/.zsh_completions $fpath)
 
 export ATUIN_CONFIG="$HOME/.config/atuin/config.toml"
 eval "$(atuin init zsh)"
-alias OSX="~/Téléchargements/OSX-KVM-lite/OpenCore-Boot.sh" 
+
+exec  ~/Code/Bash/fortune_cowsay.sh &!
 
 
-alias OSX="~/OSX-KVM/OpenCore-Boot.sh"
-alias OSX="~/OSX-KVM/OpenCore-Boot.sh"
-alias OSX="~/OSX-KVM/OpenCore-Boot.sh"
-alias OSX="~/OSX-KVM/OpenCore-Boot.sh"
-alias OSX="~/OSX-KVM/OpenCore-Boot.sh"
