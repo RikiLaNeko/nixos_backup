@@ -15,6 +15,8 @@
   boot.blacklistedKernelModules = [ "nouveau" ];
   boot.kernelParams = [ "intel_iommu=on" ];
   security.polkit.enable = true;
+
+
   ##########################
   # Virtualisation         #
   ##########################
@@ -38,9 +40,14 @@
   networking = {
     hostName = "dedsec-nixos";
     networkmanager.enable = true;
-
-
   };
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 22 80 443 11434 ]; # SSH, HTTP, HTTPS, Ollama
+    allowedUDPPorts = [ 53 ]; # DNS
+  };
+
 
   ##########################
   # Graphismes & Hardware  #
@@ -72,6 +79,33 @@
 
   hardware.nvidia-container-toolkit.enable = true;
 
+  services.thermald.enable = true; # Gestion thermique
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+      START_CHARGE_THRESH_BAT0 = 75; # Commence à charger à 75%
+      STOP_CHARGE_THRESH_BAT0 = 80; # Arrête de charger à 80%
+    };
+  };
+
+  services.auto-cpufreq = {
+    enable = true;
+    settings = {
+      battery = {
+        governor = "powersave";
+        turbo = "never";
+      };
+      charger = {
+        governor = "performance";
+        turbo = "auto";
+      };
+    };
+  };
+
   ##########################
   # Time & International   #
   ##########################
@@ -95,12 +129,12 @@
   services.xserver = {
     enable = true;
     videoDrivers = [ "nvidia" ];
-    libinput.enable = true;
     xkb = {
       layout = "fr";
       variant = "";
     };
   };
+  services.libinput.enable = true;
 
   # Désactivation de Plasma 6
   services.desktopManager.plasma6.enable = false;
@@ -136,20 +170,30 @@
   ##########################
   # Audio & Son            #
   ##########################
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+  };
   security.rtkit.enable = true;
   services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
+    enable = false;
+    alsa.enable = false;
+    alsa.support32Bit = false;
+    pulse.enable = false;
   };
 
   ##########################
   # Imprimantes & Services #
   ##########################
   services.printing.enable = true;
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    extraConfig = ''
+      PermitRootLogin yes
+    '';
+  };
+
+
 
   ##########################
   # Home Manager & Utilisateurs #
@@ -162,16 +206,16 @@
   users.users.dedsec = {
     isNormalUser = true;
     description = "dedsec";
-    extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" "kvm" "qemu" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" "kvm" "qemu" "audio" ];
     packages = with pkgs; [ ];
   };
 
-fonts.packages = with pkgs; [
-  nerd-fonts.jetbrains-mono
-];
+  fonts.packages = with pkgs; [
+    nerd-fonts.jetbrains-mono
+  ];
 
   ##########################
-  # Paquets Système        #
+  # Paquets Système    	#
   ##########################
   environment.systemPackages = with pkgs; [
     # ─────────────────────────────────────────────────────
@@ -191,199 +235,220 @@ fonts.packages = with pkgs; [
     wl-clipboard # Gestionnaire de presse-papier
     hyprpaper # Alternative pour les fonds d'écran
     xplorer # Gestionnaire de fichiers GUI
-    pacman
-    bluetui
-  brightnessctl
-  neo-cowsay
-  figlet
-  sl
-  cava
-  fortune
-  grim
-  slurp
+    pacman # Gestionnaire de paquets Arch Linux
+    bluetui # Interface TUI pour Bluetooth
+    brightnessctl # Contrôle de luminosité
+    neo-cowsay # Version modernisée de cowsay
+    figlet # Création de texte ASCII art
+    sl # Train ASCII animé
+    cava # Visualiseur audio console
+    fortune # Messages de fortune aléatoires
+    grim # Capture d'écran pour Wayland
+    slurp # Sélection de région pour Wayland
+    cmatrix # Effet de "Matrix" en terminal
+    pipes # Animation de tuyaux en ASCII
+    networkmanagerapplet # Applet de gestion réseau
+    lm_sensors # Monitoring de capteurs systèmes
+    playerctl # Contrôle des lecteurs multimédias
+    libnotify # Bibliothèque pour les notifications
+    killall # Utilitaire pour tuer des processus
+    pavucontrol # Contrôle de volume PulseAudio
+    pulsemixer # Mixeur audio en console
+    kubernetes-helm # Gestionnaire de paquets Kubernetes
+    mako # Daemon de notification pour Wayland
+    swaylock-effects # Écran de verrouillage avec effets
+
+    # Outils pour laptop
+    powertop # Analyse de consommation d'énergie
+    acpi # Information sur la batterie
+
+    # Sauvegarde
+    restic # Outil de backup léger et rapide
 
     # ─────────────────────────────────────────────────────
     # ÉDITEURS DE TEXTE & IDE
     # ─────────────────────────────────────────────────────
-    neovim # Éditeur de texte léger et rapide, avec de nombreuses extensions
-    vscode # Visual Studio Code (IDE polyvalent) avec support d'extensions
-    jetbrains-toolbox # Gestionnaire des IDE JetBrains (IntelliJ IDEA, PyCharm, etc.)
-    obsidian # Gestionnaire de notes et base de connaissances
+    neovim # Éditeur de texte avancé
+    vscode # Visual Studio Code
+    jetbrains-toolbox # Gestionnaire d'IDE JetBrains
+    obsidian # Gestionnaire de notes
 
     # ─────────────────────────────────────────────────────
     # OUTILS DE DÉVELOPPEMENT
     # ─────────────────────────────────────────────────────
     ## Gestion des versions et dépendances
-    git # Gestionnaire de versions Git pour le contrôle de source
-    pkg-config # Outil pour gérer les dépendances C/C++ via des fichiers de configuration
-    readline # Gestion des entrées en ligne de commande pour une meilleure UX
-    openssl # Bibliothèque de chiffrement, utilisée dans la sécurité des applications
-    libffi # Interface d'appel de fonctions C pour les bindings entre langages
-    libyaml # Librairie pour parser et écrire du YAML, très utilisé dans les configurations
-    zlib # Compression des données, utilisée par de nombreux outils et applications
+    git # Système de contrôle de version
+    pkg-config # Outil pour les dépendances C/C++
+    readline # Bibliothèque pour l'entrée en ligne de commande
+    openssl # Bibliothèque de chiffrement
+    libffi # Interface d'appel de fonctions
+    libyaml # Parser YAML
+    zlib # Bibliothèque de compression
     gtk3 # Toolkit d'interface graphique
-    webkitgtk # Moteur de rendu web pour GTK
-    nsis # Installateur pour Windows
+    # Spécification explicite de la version ABI pour webkitgtk
+    webkitgtk_4_1 # Moteur de rendu web avec version ABI spécifiée
+    nsis # Installateur Windows
     upx # Compresseur d'exécutables
 
     ## Compilation et outils de build
-    gcc # Compilateur C/C++, l'un des plus utilisés
-    gnumake # Makefile, utile pour automatiser les tâches de build
-    cmake # Outil de build C++ multiplateforme
+    gcc # Compilateur C/C++
+    gnumake # Outil de build
+    cmake # Système de build multi-plateforme
 
     ## Langages de programmation
     ### JavaScript / TypeScript
-    nodejs # Runtime JS pour exécuter des applications JavaScript côté serveur
-    bun # Runtime JS alternatif plus rapide, incluant un bundler et un gestionnaire de paquets
-    yay
+    nodejs # Runtime JavaScript
+    bun # Runtime JS moderne
+    yay # Gestionnaire de paquets AUR
 
-    ### Java, Kotlin & Spring
-    jdk8 # Java Development Kit 8 (legacy), pour les applications Java anciennes
-    jdk17 # Java Development Kit 17 (LTS), version stable et à long terme
-    jdk21 # Java Development Kit 21 (dernier stable), dernière version de Java
-    kotlin # Langage Kotlin pour le développement moderne et multiplateforme
-    gradle # Outil de build pour JVM, avec support Kotlin, Groovy et autres
-    maven # Gestionnaire de dépendances Java, utilisé dans de nombreux projets Java
-    spring-boot-cli # CLI pour Spring Boot, simplifie le démarrage d'applications Spring
+    ### Java Kotlin & Spring
+    jdk8 # Java 8
+    jdk17 # Java 17 LTS
+    jdk21 # Java 21
+    kotlin # Langage Kotlin
+    gradle # Système de build Java/Kotlin
+    maven # Gestionnaire de dépendances Java
+    spring-boot-cli # CLI Spring Boot
 
     ### Go
-    go # Langage Go, connu pour sa simplicité et ses performances élevées
-    air # Hot reload pour Go, permet de recharger automatiquement les applications Go
-    wails # Framework pour créer des applications desktop avec Go et Web Technologies
+    go # Langage Go
+    air # Hot reload pour Go
+    wails # Framework desktop Go + Web
 
     ### Rust
-    rustup # Gestionnaire Rust pour gérer les versions et les outils Rust
+    rustup # Gestionnaire de versions Rust
     rustc # Compilateur Rust
-    cargo-tauri # Framework pour créer des applications desktop avec Rust et Web Technologies
+    cargo-tauri # Framework desktop Rust + Web
 
     ### Zig
-    zig # Langage Zig, connu pour sa performance et sa gestion manuelle de la mémoire
+    zig # Langage Zig
 
     ### Assembleur
-    nasm # Assembleur x86, utilisé pour écrire du code bas niveau performant
+    nasm # Assembleur x86
 
     ### PHP & Laravel
-    php # PHP, langage populaire pour le développement web
-    laravel # Framework Laravel, connu pour sa simplicité et ses bonnes pratiques en PHP
+    php # Langage PHP
+    laravel # Framework Laravel
 
     ### Ruby & Rails
-    ruby # Ruby, langage de programmation dynamique
-    rbenv # Gestionnaire de versions Ruby pour faciliter la gestion de plusieurs versions
+    ruby # Langage Ruby
+    rbenv # Gestionnaire de versions Ruby
 
     ### Python
-    python3 # Python 3, très utilisé pour le développement de scripts et d'applications
+    python3 # Python 3
     python3Packages.pip # Gestionnaire de paquets Python
-    python3Packages.virtualenv # Environnements virtuels pour Python
+    python3Packages.virtualenv # Environnements virtuels Python
 
     ### C#
-    mono # Implémentation open-source de .NET
-    dotnet-sdk # SDK officiel pour .NET, nécessaire au développement en C#
+    mono # Implémentation .NET
+    dotnet-sdk # SDK .NET officiel
 
     ## Développement Mobile
-    flutter # SDK Flutter pour le développement mobile multiplateforme
+    flutter # Framework UI multi-plateforme
 
     ## Outils de développement Nix
     nixpkgs-fmt # Formatage de fichiers Nix
-    nixd # Serveur LSP pour le langage Nix, utile pour l'édition de fichiers .nix
-    devbox # Gestion simplifiée des environnements de développement
-    direnv # Chargement automatique des variables d'environnement par projet
-    just # Alternative moderne à Makefile pour automatiser des tâches
-    difftastic # Diff amélioré avec reconnaissance syntaxique
+    nixd # Serveur LSP pour Nix
+    devbox # Environnements de développement
+    direnv # Environnements par répertoire
+    just # Alternative à Make
+    difftastic # Outil de diff syntaxique
 
     # ─────────────────────────────────────────────────────
     # MOTEURS & OUTILS DE DÉVELOPPEMENT DE JEUX
     # ─────────────────────────────────────────────────────
-    godot_4 # Moteur de jeu Godot 4, open source pour la création de jeux vidéo
-    unityhub # Gestionnaire Unity
-    scenebuilder # Outil pour créer des interfaces JavaFX
-    blender # Modélisation 3D, animation et rendu
-    gimp # Édition d'images et création graphique
+    godot_4 # Moteur de jeu Godot 4
+    unityhub # Hub Unity
+    scenebuilder # Créateur d'interfaces JavaFX
+    blender # Modeleur 3D
+    gimp # Éditeur d'images
 
     # ─────────────────────────────────────────────────────
     # BASES DE DONNÉES
     # ─────────────────────────────────────────────────────
-    postgresql # SGBD relationnel Open Source, robuste et largement utilisé
-    postgresql.lib # Bibliothèque PostgreSQL pour les applications C/C++ et autres
-    sqlite # Base de données légère, utilisée dans les applications mobiles ou embarquées
-    redis # Cache / stockage en RAM pour des performances accrues
+    postgresql # SGBD PostgreSQL
+    postgresql.lib # Bibliothèque PostgreSQL
+    sqlite # Base de données légère
+    redis # Stockage clé-valeur en mémoire
+    dbeaver-bin # Client SQL universel
 
     # ─────────────────────────────────────────────────────
     # OUTILS CLI & SHELL
     # ─────────────────────────────────────────────────────
-    tmux # Multiplexeur de terminaux, permet de gérer plusieurs sessions (Gardée le temps de s'habituée a zellij)
-    zellij # Alternative moderne à tmux avec interfaces tiling, modes et plugins. Écrit en Rust avec une meilleure UX
-    fzf # Recherche floue dans le terminal, améliore l'efficacité de navigation
-    curl # Requêtes HTTP en ligne de commande
+    tmux # Multiplexeur de terminaux
+    zellij # Alternative moderne à tmux
+    fzf # Recherche floue
+    curl # Transfert de données
     wget # Téléchargement HTTP
-    gh # CLI GitHub pour gérer les dépôts GitHub directement depuis le terminal
-    gitleaks # Détection de secrets dans Git
-    httpie # Alternative plus lisible à curl
+    gh # CLI GitHub
+    gitleaks # Détection de secrets
+    httpie # Client HTTP convivial
     ghostty # Terminal moderne
-    eza # Meilleur `ls` pour un affichage enrichi avec icônes et couleurs
-    bat # Meilleur `cat` avec coloration syntaxique et meilleure lisibilité
-    fd # Recherche rapide et efficace de fichiers, alternative à `find`
-    ripgrep # Recherche de texte ultra-rapide dans des fichiers, alternative à `grep`
-    btop # Moniteur système avec une interface graphique très claire
-    tldr # Résumés simplifiés des pages man pour une consultation rapide
-    atuin # Historique de commande avancé avec synchronisation optionnelle
-    yazi # Gestionnaire de fichiers en terminal avec interface moderne
-    mprocs # Gestion de plusieurs processus dans le terminal
-    hugo # Générateur de sites statiques rapide
-    zoxide # Navigation rapide entre dossiers
-    jq # Traitement de données JSON en ligne de commande
-    tree # Affichage récursif des dossiers
-    nmap # Scanner de ports réseau
-    fastfetch # Affichage d'informations système avec style || nouveau neofetch
-    taskwarrior3 # Gestionnaire de tâches en CLI hautement configurable avec gestion de priorités et échéances
-    jenkins # Extendable open source continuous integration server 
+    eza # Alternative à ls
+    bat # Alternative à cat
+    fd # Alternative à find
+    ripgrep # Alternative à grep
+    btop # Moniteur système
+    tldr # Alternative simplifiée à man
+    atuin # Historique de shell amélioré
+    yazi # Gestionnaire de fichiers TUI
+    mprocs # Gestion de processus multiples
+    hugo # Générateur de sites statiques
+    zoxide # Navigation intelligente
+    jq # Processeur JSON
+    tree # Affichage arborescent
+    nmap # Scanner réseau
+    fastfetch # Information système
+    taskwarrior3 # Gestionnaire de tâches
+    jenkins # Serveur d'intégration continue
 
     # ─────────────────────────────────────────────────────
     # VIRTUALISATION & CONTAINERS
     # ─────────────────────────────────────────────────────
-    qemu_full # Émulateur et virtualisation matérielle
-    virt-manager # Interface graphique pour gérer les machines virtuelles avec libvirt
-    virt-viewer # Visionneuse pour se connecter aux machines virtuelles
-    libvirt # Bibliothèque et outil CLI pour gérer les machines virtuelles
-    ollama # Gestionnaire de modèles LLM en local
-    docker-compose # Orchestration de conteneurs Docker
-    nvidia-container-toolkit # Outils pour exécuter des conteneurs GPU avec NVIDIA
-    nvidia-docker # Extension Docker pour l'accélération GPU
-    kubernetes # Orchestration de conteneurs à grande échelle
-    minikube # Exécution locale d'un cluster Kubernetes
-    podman # Alternative à Docker sans démon centralisé
-    stern # Affichage des logs de plusieurs pods Kubernetes en temps réel
-    k9s # Interface en terminal pour gérer Kubernetes
+    qemu_full # Émulateur et virtualisation
+    virt-manager # Interface graphique libvirt
+    virt-viewer # Visualisation VM
+    libvirt # API de virtualisation
+    ollama # Gestionnaire de modèles LLM
+    docker-compose # Orchestration Docker
+    nvidia-container-toolkit # Support GPU pour conteneurs
+    nvidia-docker # Docker avec support NVIDIA
+    kubernetes # Orchestration de conteneurs
+    minikube # Kubernetes local
+    podman # Alternative à Docker
+    stern # Logs multi-pods Kubernetes
+    k9s # Interface TUI Kubernetes
 
     # ─────────────────────────────────────────────────────
     # NAVIGATION & COMMUNICATION
     # ─────────────────────────────────────────────────────
-    librewolf # Fork de Firefox, axé sur la vie privée
-    (discord.override { withVencord = true; }) # Discord + Vencord
+    librewolf # Navigateur axé sur la vie privée
+    (discord.override { withVencord = true; }) # Discord amélioré
     element-desktop # Client Matrix
-    parsec-bin # Remote Desktop Gaming
-    teams-for-linux # Client non officiel de Microsoft Teams pour Linux
-    simplex-chat-desktop # Client de messagerie privée
-    calibre # Gestion d'e-books et bibliothèque numérique
+    parsec-bin # Bureau à distance gaming
+    teams-for-linux # Client Teams non-officiel
+    simplex-chat-desktop # Messagerie sécurisée
+    calibre # Gestion d'e-books
 
     # ─────────────────────────────────────────────────────
     # GAMING
     # ─────────────────────────────────────────────────────
-    lutris # Gestion des jeux sous Linux
-    osu-lazer # Version open-source de Osu!
-    prismlauncher # Minecraft launcher alternatif
-    heroic # Client pour Epic Games & GOG sur Linux
-    wine # Couche de compatibilité Windows
+    lutris # Gestionnaire de jeux
+    osu-lazer # Jeu de rythme
+    prismlauncher # Lanceur Minecraft
+    heroic # Client Epic Games et GOG
+    wine # Compatibilité Windows
     steam # Plateforme de jeux
-    gamemode # Optimisations pour les jeux
+    gamemode # Optimisations pour jeux
 
     # ─────────────────────────────────────────────────────
     # AUDIO & MULTIMÉDIA
     # ─────────────────────────────────────────────────────
-    lmms # Station audionumérique pour la création musicale
-    clementine # Lecteur audio avancé
-    scdl # Téléchargement de musiques SoundCloud
-    ffmpeg # Outil de traitement et conversion audio/vidéo
-    vlc # Lecteur multimédia polyvalent
+    lmms # Station audio numérique
+    clementine # Lecteur audio
+    scdl # Téléchargement SoundCloud
+    ffmpeg # Traitement audio/vidéo
+    vlc # Lecteur multimédia
     mpv # Lecteur vidéo minimaliste
     audacity # Éditeur audio
 
@@ -397,28 +462,25 @@ fonts.packages = with pkgs; [
     # ─────────────────────────────────────────────────────
     # LAZY
     # ─────────────────────────────────────────────────────
-    lazygit # Interface TUI pour Git avec visualisation de branches, gestion de commits et résolution de conflits
-    lazydocker # Gestionnaire de conteneurs Docker en TUI avec monitoring de ressources et logs en temps réel
-    lazysql # Interface TUI pour bases de données SQL avec visualisation des données et édition simplifiée
-
-
+    lazygit # Interface TUI Git
+    lazydocker # Interface TUI Docker
+    lazysql # Interface TUI SQL
 
     # ─────────────────────────────────────────────────────
     # RÉSEAU & ACCÈS DISTANT
     # ─────────────────────────────────────────────────────
-    ngrok # Tunnel réseau sécurisé
-    wireguard-tools # VPN moderne et sécurisé
+    ngrok # Tunnels sécurisés
+    wireguard-tools # VPN moderne
     openvpn # Solution VPN classique
-    sshfs # Montage de systèmes de fichiers via SSH
-    filezilla # Client FTP/SFTP graphique
+    sshfs # Montage SSH
+    filezilla # Client FTP/SFTP
 
     # ─────────────────────────────────────────────────────
     # OUTILS ANDROID & MOBILE
     # ─────────────────────────────────────────────────────
-    android-tools # ADB & Fastboot pour Android
-    scrcpy # Affichage et contrôle d'appareils Android
+    android-tools # ADB & Fastboot
+    scrcpy # Mirroring Android
   ];
-
 
 
 
@@ -491,6 +553,14 @@ fonts.packages = with pkgs; [
     TERMINAL = "ghostty";
     DEFAULT_TERM = "ghostty";
   };
+
+  system.autoUpgrade = {
+    enable = true;
+    allowReboot = false; # Ne redémarre pas automatiquement
+    dates = "04:00"; # À 4h du matin
+    randomizedDelaySec = "45min"; # Délai aléatoire pour éviter la charge sur les serveurs
+  };
+
 
   ##########################
   # Version d'état         #

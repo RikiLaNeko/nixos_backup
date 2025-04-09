@@ -3,9 +3,6 @@
 # Author: Jesse Mirabel (@sejjy)
 # GitHub: https://github.com/sejjy/mechabar
 
-# Wi-Fi interface (forced to your real one)
-wifi_iface="wlp0s20f0u1"
-
 # Rofi config
 config="$HOME/.config/rofi/wifi-menu.rasi"
 
@@ -20,83 +17,92 @@ override_ssid="entry { placeholder: \"Enter SSID\"; } listview { lines: 0; paddi
 override_password="entry { placeholder: \"Enter password\"; } listview { lines: 0; padding: 20px 6px; }"
 override_disabled="mainbox { children: [ textbox-custom, listview ]; } listview { lines: 1; padding: 6px 6px 8px; }"
 
+# Function to list WiFi networks
+
+
 # Prompt for password
 get_password() {
-  echo "[INFO] Demande de mot de passe pour le Wi-Fi"
+  echo "Enter Wi-Fi password:"
   rofi -dmenu -password -config "${config}" -theme-str "${override_password}" -p " " || pkill -x rofi
 }
 
 while true; do
-  # Function to list WiFi networks (from the correct interface)
+  # Function to list WiFi networks
   wifi_list() {
-    echo "[INFO] Récupération de la liste des réseaux via l'interface $wifi_iface"
-    nmcli --fields "SECURITY,SSID" device wifi list ifname "$wifi_iface" |
-      tail -n +1 |
-      sed 's/  */ /g' |
-      sed -E "s/WPA*.?\S/🔒 /g" |
-      sed "s/^--/🔓 /g" |
-      sed "s/🔒  🔒/🔒/g" |
-      sed "/--/d" |
-      awk '!seen[$NF]++'
-  }
-
+  nmcli --fields "SECURITY,SSID" device wifi list |
+    tail -n +1 |               # Skip the header line from nmcli output
+    sed 's/  */ /g' |          # Replace multiple spaces with a single space
+    sed -E "s/WPA*.?\S/🔒 /g" | # Replace 'WPA*' with a lock icon (simplified)
+    sed "s/^--/🔓 /g" |         # Replace '--' (open networks) with an open icon
+    sed "s/🔒  🔒/🔒/g" |        # Remove duplicate lock icons
+    sed "/--/d" |              # Remove lines with empty SSIDs
+    awk '!seen[$NF]++' # Remove duplicates based on SSID
+}
+  # Get Wi-Fi status
   wifi_status=$(nmcli -fields WIFI g)
+  
+  # Check if WiFi is enabled - using a more language-independent method
   wifi_enabled=$(nmcli radio wifi)
-
-  echo "[INFO] État du Wi-Fi : $wifi_enabled"
-
+  
   if [[ "$wifi_enabled" == "enabled" ]] || [[ "$wifi_enabled" == "activé" ]]; then
+    # WiFi is enabled
+    # Save the WiFi list to a variable first
     wifi_list_output=$(wifi_list)
+    
+    # Then combine options and wifi list
     full_options="$options"$'\n'"$wifi_list_output"
-    echo "[INFO] Affichage du menu Rofi avec les réseaux détectés"
     selected_option=$(echo "$full_options" |
       rofi -dmenu -i -selected-row 1 -config "${config}" -p " " || pkill -x rofi)
   else
-    echo "[INFO] Le Wi-Fi est désactivé, affichage de l'option d'activation"
+    # WiFi is disabled
     selected_option=$(echo "$option_disabled" |
       rofi -dmenu -i -config "${config}" -theme-str "${override_disabled}" || pkill -x rofi)
   fi
-
+  
+  # Exit if no selection was made
   if [ -z "$selected_option" ]; then
-    echo "[INFO] Aucune option sélectionnée, sortie du script."
     exit
   fi
 
+  # Extract selected SSID
   read -r selected_ssid <<<"${selected_option:3}"
-  echo "[INFO] Option sélectionnée : $selected_option"
-  echo "[INFO] SSID sélectionné : $selected_ssid"
 
+  # Actions based on selected option
   case "$selected_option" in
   *"Enable Wi-Fi")
-    echo "[ACTION] Activation du Wi-Fi..."
     notify-send "Scanning for networks..." -i "package-installed-outdated"
     nmcli radio wifi on
-    nmcli device wifi rescan ifname "$wifi_iface"
+    nmcli device wifi rescan
     sleep 3
     ;;
   *"Disable Wi-Fi")
-    echo "[ACTION] Désactivation du Wi-Fi..."
     notify-send "Wi-Fi Disabled" -i "package-broken"
     nmcli radio wifi off
     exit
     ;;
   *"Manual Entry")
-    echo "[ACTION] Connexion manuelle"
+    # Prompt for SSID
     manual_ssid=$(rofi -dmenu -config "${config}" -theme-str "${override_ssid}" -p " " || pkill -x rofi)
-    if [ -z "$manual_ssid" ]; then exit; fi
+
+    # Exit if no option is selected
+    if [ -z "$manual_ssid" ]; then
+      exit
+    fi
+
+    # Prompt for Wi-Fi password
     wifi_password=$(get_password)
 
     if [ -z "$wifi_password" ]; then
-      echo "[INFO] Connexion à $manual_ssid sans mot de passe"
-      if nmcli device wifi connect "$manual_ssid" ifname "$wifi_iface" | grep -q "successfully"; then
+      # Without password
+      if nmcli device wifi connect "$manual_ssid" | grep -q "successfully"; then
         notify-send "Connected to \"$manual_ssid\"." -i "package-installed-outdated"
         exit
       else
         notify-send "Failed to connect to \"$manual_ssid\"." -i "package-broken"
       fi
     else
-      echo "[INFO] Connexion à $manual_ssid avec mot de passe"
-      if nmcli device wifi connect "$manual_ssid" password "$wifi_password" ifname "$wifi_iface" | grep -q "successfully"; then
+      # With password
+      if nmcli device wifi connect "$manual_ssid" password "$wifi_password" | grep -q "successfully"; then
         notify-send "Connected to \"$manual_ssid\"." -i "package-installed-outdated"
         exit
       else
@@ -105,29 +111,29 @@ while true; do
     fi
     ;;
   *)
+    # Get saved connections
     saved_connections=$(nmcli -g NAME connection)
+
     if echo "$saved_connections" | grep -qw "$selected_ssid"; then
-      echo "[INFO] Connexion à un réseau enregistré : $selected_ssid"
-      if nmcli connection up id "$selected_ssid" ifname "$wifi_iface" | grep -q "successfully"; then
+      if nmcli connection up id "$selected_ssid" | grep -q "successfully"; then
         notify-send "Connected to \"$selected_ssid\"." -i "package-installed-outdated"
         exit
       else
         notify-send "Failed to connect to \"$selected_ssid\"." -i "package-broken"
       fi
     else
+      # Handle secure network connection
       if [[ "$selected_option" =~ ^"🔒" ]]; then
         wifi_password=$(get_password)
       fi
 
-      echo "[INFO] Connexion à un nouveau réseau : $selected_ssid"
-      if nmcli device wifi connect "$selected_ssid" password "$wifi_password" ifname "$wifi_iface" | grep -q "successfully"; then
+      if nmcli device wifi connect "$selected_ssid" password "$wifi_password" | grep -q "successfully"; then
         notify-send "Connected to \"$selected_ssid\"." -i "package-installed-outdated"
         exit
       else
-        notify-send "Failed to connect to \"$selected_ssid\"." -i "package-broken"
+        notify-send "Failed to connect to \"$manual_ssid\"." -i "package-broken"
       fi
     fi
     ;;
   esac
 done
-
