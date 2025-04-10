@@ -130,9 +130,9 @@
         "<span foreground='#a6e3a1'> </span> $1",
 
       "vim": 
-        "<span foreground='#a6e3a1'> </span> Vim",
+        "<span foreground='#a6e3a1'>  </span> NVim",
       "vim (.*)": 
-        "<span foreground='#a6e3a1'> </span> $1",
+        "<span foreground='#a6e3a1'>  </span> $1",
 
       // Media
 
@@ -152,6 +152,7 @@
       "(.*) - mpv": 
         "<span foreground='#cba6f7'> </span> $1",
 
+    
       "qView": "  qView",
 
       "(.*).jpg": "  $1.jpg",

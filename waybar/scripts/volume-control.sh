@@ -33,16 +33,16 @@ icon() {
 
 send_notification() {
   icon
-  notify-send -a "state" -r 91190 -i "$icon" -h int:value:"$vol" "Volume: ${vol}%" -u low
+  notify-send -a "state" -r 91190 -i "$icon" -h int:value:"$vol" "Volume: ${vol}%" -u low -t 2000
 }
 
 notify_mute() {
   mute=$(pactl get-sink-mute @DEFAULT_SINK@ | awk '{print $2}')
   if [ "$mute" = "yes" ]; then
-    notify-send -a "state" -r 91190 -i "volume-level-muted" "Volume: Muted" -u low
+    notify-send -a "state" -r 91190 -i "volume-level-muted" "Volume: Muted" -u low -t 2000
   else
     icon
-    notify-send -a "state" -r 91190 -i "$icon" "Volume: Unmuted" -u low
+    notify-send -a "state" -r 91190 -i "$icon" "Volume: Unmuted" -u low -t 2000
   fi
 }
 
@@ -72,9 +72,9 @@ select_output() {
     desc="$*"
     device=$(pactl list sinks | grep -C2 -F "Description: $desc" | grep Name | cut -d: -f2 | xargs)
     if pactl set-default-sink "$device"; then
-      notify-send -r 91190 "Activated: $desc"
+      notify-send -r 91190 "Activated: $desc" -t 2000
     else
-      notify-send -r 91190 "Error activating $desc"
+      notify-send -r 91190 "Error activating $desc" -t 2000
     fi
   else
     pactl list sinks | grep -ie "Description:" | awk -F ': ' '{print $2}' | sort

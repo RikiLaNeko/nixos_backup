@@ -44,8 +44,8 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 80 443 11434 ]; # SSH, HTTP, HTTPS, Ollama
-    allowedUDPPorts = [ 53 ]; # DNS
+    allowedTCPPorts = [ 22 80 443 11434 8080 ]; # SSH, HTTP, HTTPS, Ollama
+    allowedUDPPorts = [ 53 8080]; # DNS
   };
 
 
@@ -257,6 +257,8 @@
     kubernetes-helm # Gestionnaire de paquets Kubernetes
     mako # Daemon de notification pour Wayland
     swaylock-effects # Écran de verrouillage avec effets
+    upower
+
 
     # Outils pour laptop
     powertop # Analyse de consommation d'énergie
@@ -418,6 +420,7 @@
     podman # Alternative à Docker
     stern # Logs multi-pods Kubernetes
     k9s # Interface TUI Kubernetes
+    remmina # Visualiseur SSH/VNC/RDP ect ect
 
     # ─────────────────────────────────────────────────────
     # NAVIGATION & COMMUNICATION
